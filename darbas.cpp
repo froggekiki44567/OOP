@@ -100,9 +100,10 @@ int main() {
         double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
         double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
         double mediana = skaiciuotiMediana(studentas.nd_balai);
+        double galutinisMediana = 0.4 * mediana + 0.6 * studentas.egzaminas;
         std::cout << std::left << std::setw(12) << studentas.vardas
                   << std::setw(14) << studentas.pavarde
-                  << std::fixed << std::setprecision(2) << galutinisVidurkis << std::endl;
+                  << std::fixed << std::setprecision(2) << galutinisVidurkis << galutinisMediana << std::endl;
     }
     
     return 0;
