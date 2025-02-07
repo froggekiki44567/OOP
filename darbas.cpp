@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <limits>
 #include <cctype>
+#include <algorithm>
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -27,7 +28,7 @@ bool Patikra(const std::string& str) {
     }
     return true;
 }
-// medianaos skaiciavimo forma
+// medianos skaiciavimo forma
 double skaiciuotiMediana(std::vector<int> pazymiai) {
     if (pazymiai.empty()) return 0.0;
     std::sort(pazymiai.begin(), pazymiai.end());
