@@ -27,6 +27,13 @@ bool Patikra(const std::string& str) {
     }
     return true;
 }
+// medianaos skaiciavimo forma
+double skaiciuotiMediana(std::vector<int> pazymiai) {
+    if (pazymiai.empty()) return 0.0;
+    std::sort(pazymiai.begin(), pazymiai.end());
+    size_t dydis = pazymiai.size();
+    return (dydis % 2 == 0) ? (pazymiai[dydis/2 - 1] + pazymiai[dydis/2]) / 2.0 : pazymiai[dydis/2];
+}
 
 int main() {
     std::vector<Student> studentai;
@@ -86,12 +93,13 @@ int main() {
         
     } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
     
-    std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)" << std::endl;
-    std::cout << "--------------------------------------------" << std::endl;
+    std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
+    std::cout << "--------------------------------------------------------------------------" << std::endl;
     
     for (const auto& studentas : studentai) {
         double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
         double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
+        double mediana = skaiciuotiMediana(studentas.nd_balai);
         std::cout << std::left << std::setw(12) << studentas.vardas
                   << std::setw(14) << studentas.pavarde
                   << std::fixed << std::setprecision(2) << galutinisVidurkis << std::endl;
