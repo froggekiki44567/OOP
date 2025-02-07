@@ -59,31 +59,29 @@ int main() {
                 std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
             }
         }
-        
-        std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-        int balas;
-        bool IvestasND = false;
-        while (std::cin >> balas) {
-            if (balas < 0 || balas > 10) {
-                std::cout << "Įveskite balą nuo 0 iki 10!\n";
-                continue;
+
+        while(true){
+            std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
+            int balas;
+            while (std::cin >> balas) {
+                if (balas < 0 || balas > 10) {
+                    std::cout << "Įveskite balą nuo 0 iki 10!\n";
+                    continue;
+                }
+                studentas.nd_balai.push_back(balas);
             }
-            studentas.nd_balai.push_back(balas);
-            IvestasND = true;
+            if (studentas.nd_balai.empty()) {
+                std::cout << "Turite įvesti bent vieną namų darbą! Programa paleidžiama iš naujo!\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            } else {
+                break;
+            }
         }
-        if(!IvestasND) {
-            std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
-            continue;
-        }
-        
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
         while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
             std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
         
         studentai.push_back(studentas);
