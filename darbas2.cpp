@@ -6,7 +6,7 @@
 #include <cctype>
 #include <algorithm>
 
-// Struktūra studento duomenims
+// struktura kuri saugo studento duomenis
 struct Student {
     std::string vardas;
     std::string pavarde;
@@ -15,21 +15,23 @@ struct Student {
     int egzaminas;
 };
 
-// Susieto sąrašo mazgas
+// susieto sąrašo mazgas
 struct Node {
     Student studentas;
     Node* next;
 };
 
-// Funkcija tikrinanti, ar vardas ir pavardė sudaryti tik iš raidžių
+// funckija kuri patikrina ar nera ivesti skaiciai yra raides (varde, pavardėje)
 bool Patikra(const std::string& str) {
     for (char c : str) {
-        if (!std::isalpha(c)) return false;
+        if (!std::isalpha(c)) {
+            return false;
+        }
     }
     return true;
 }
 
-// Funkcija apskaičiuoti vidurkį
+// funkcija kuri suskaiciuoja vidurki is pazymiu
 double skaiciuotiVidurki(const int* pazymiai, int dydis) {
     if (dydis == 0) return 0.0;
     int suma = 0;
@@ -39,82 +41,122 @@ double skaiciuotiVidurki(const int* pazymiai, int dydis) {
     return static_cast<double>(suma) / dydis;
 }
 
-// Funkcija apskaičiuoti medianą
+// medianos skaiciavimo forma
 double skaiciuotiMediana(int* pazymiai, int dydis) {
     if (dydis == 0) return 0.0;
     std::sort(pazymiai, pazymiai + dydis);
     return (dydis % 2 == 0) ? (pazymiai[dydis/2 - 1] + pazymiai[dydis/2]) / 2.0 : pazymiai[dydis/2];
 }
 
+// funkcija generuoti atsitiktinius studentus
+Student generuotiStudenta() {
+    Student studentas;
+    std::string vardai[] = {"Jonas", "Petras", "Ona", "Ieva", "Marius"};
+    std::string pavardes[] = {"Jonaitis", "Petraitis", "Onaitė", "Ievaitė", "Maraitis"};
+    studentas.vardas = vardai[rand() % 5];
+    studentas.pavarde = pavardes[rand() % 5];
+    studentas.nd_kiekis = rand() % 5 + 1;
+    studentas.nd_balai = new int[studentas.nd_kiekis];
+    for (int i = 0; i < studentas.nd_kiekis; i++) {
+        studentas.nd_balai[i] = rand() % 11;
+    }
+    studentas.egzaminas = rand() % 11;
+    return studentas;
+}
+
 int main() {
+    srand(time(0));
     Node* head = nullptr;
     char pasirinkimas;
-    
+    char autogenravimas;
+    int studentuSk;
+
+    std::cout << "Ar norite sugeneruoti studentų duomenis automatiškai? (y/n): ";
+    std::cin >> autogenravimas;
+
+    if (autogenravimas == 'y' || autogenravimas == 'Y') {
+        std::cout << "Kiek studentų norite sugeneruoti? ";
+        std::cin >> studentuSk;
+    }
+
     do {
         Student studentas;
-        std::cout << "\nĮveskite studento vardą: ";
-        while (true) {
-            std::cin >> studentas.vardas;
-            if (Patikra(studentas.vardas)) break;
-            std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
-        }
+        if (autogenravimas == 'y' || autogenravimas == 'Y') {
+            for (int i = 0; i < studentuSk; i++) {
+                studentas = generuotiStudenta();
+                Node* naujas = new Node;
+                naujas->studentas = studentas;
+                naujas->next = head;
+                head = naujas;
+            }
+            break;
+        } else {
+            std::cout << "\nĮveskite studento vardą: ";
+            while (true) {
+                std::cin >> studentas.vardas;
+                if (Patikra(studentas.vardas)) break;
+                std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
+            }
 
-        std::cout << "Įveskite studento pavardę: ";
-        while (true) {
-            std::cin >> studentas.pavarde;
-            if (Patikra(studentas.pavarde)) break;
-            std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
-        }
+            std::cout << "Įveskite studento pavardę: ";
+            while (true) {
+                std::cin >> studentas.pavarde;
+                if (Patikra(studentas.pavarde)) break;
+                std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
+            }
         
-        studentas.nd_balai = nullptr;
-        studentas.nd_kiekis = 0;
+            studentas.nd_balai = nullptr;
+            studentas.nd_kiekis = 0;
         
-        while (true) {
-            std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-            int balas;
-            bool validInput = false;
-            while (std::cin >> balas) {
-                if (balas < 0 || balas > 10) {
-                    std::cout << "Įveskite balą nuo 0 iki 10!\n";
+            while (true) {
+                std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
+                int balas;
+                bool ivedimas = false;
+                while (std::cin >> balas) {
+                    if (balas < 0 || balas > 10) {
+                        std::cout << "Įveskite balą nuo 0 iki 10!\n";
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
+                    }
+                
+                    int* temp = new int[studentas.nd_kiekis + 1];
+                    for (int i = 0; i < studentas.nd_kiekis; i++) {
+                        temp[i] = studentas.nd_balai[i];
+                    }
+                    temp[studentas.nd_kiekis] = balas;
+                    delete[] studentas.nd_balai;
+                    studentas.nd_balai = temp;
+                    studentas.nd_kiekis++;
+                    ivedimas = true;
+                }
+                if (!ivedimas && studentas.nd_kiekis == 0) {
+                    std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    continue;
+                } else {
+                    break;
                 }
-                
-                int* temp = new int[studentas.nd_kiekis + 1];
-                for (int i = 0; i < studentas.nd_kiekis; i++) {
-                    temp[i] = studentas.nd_balai[i];
-                }
-                temp[studentas.nd_kiekis] = balas;
-                delete[] studentas.nd_balai;
-                studentas.nd_balai = temp;
-                studentas.nd_kiekis++;
-                validInput = true;
             }
-            if (!validInput && studentas.nd_kiekis == 0) {
-                std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
+
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        
+            std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
+            while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
+                std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            } else {
-                break;
             }
+        
+            Node* naujas = new Node;
+            naujas->studentas = studentas;
+            naujas->next = head;
+            head = naujas;
+        
+            std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
+            std::cin >> pasirinkimas;
         }
-        
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        
-        std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
-        while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
-            std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
-        }
-        
-        Node* naujas = new Node;
-        naujas->studentas = studentas;
-        naujas->next = head;
-        head = naujas;
-        
-        std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
-        std::cin >> pasirinkimas;
         
     } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
     
