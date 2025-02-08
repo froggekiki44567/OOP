@@ -69,23 +69,37 @@ int main() {
         studentas.nd_balai = nullptr;
         studentas.nd_kiekis = 0;
         
-        std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-        int balas;
-        while (std::cin >> balas) {
-            if (balas < 0 || balas > 10) {
-                std::cout << "Įveskite balą nuo 0 iki 10!\n";
-                continue;
+        while (true) {
+            std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
+            int balas;
+            bool validInput = false;
+            while (std::cin >> balas) {
+                if (balas < 0 || balas > 10) {
+                    std::cout << "Įveskite balą nuo 0 iki 10!\n";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    continue;
+                }
+                
+                int* temp = new int[studentas.nd_kiekis + 1];
+                for (int i = 0; i < studentas.nd_kiekis; i++) {
+                    temp[i] = studentas.nd_balai[i];
+                }
+                temp[studentas.nd_kiekis] = balas;
+                delete[] studentas.nd_balai;
+                studentas.nd_balai = temp;
+                studentas.nd_kiekis++;
+                validInput = true;
             }
-            
-            int* temp = new int[studentas.nd_kiekis + 1];
-            for (int i = 0; i < studentas.nd_kiekis; i++) {
-                temp[i] = studentas.nd_balai[i];
+            if (!validInput && studentas.nd_kiekis == 0) {
+                std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            } else {
+                break;
             }
-            temp[studentas.nd_kiekis] = balas;
-            delete[] studentas.nd_balai;
-            studentas.nd_balai = temp;
-            studentas.nd_kiekis++;
         }
+        
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         
@@ -94,7 +108,9 @@ int main() {
             std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
         }
         
-        Node* naujas = new Node{studentas, head};
+        Node* naujas = new Node;
+        naujas->studentas = studentas;
+        naujas->next = head;
         head = naujas;
         
         std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
