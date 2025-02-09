@@ -187,7 +187,7 @@ int main() {
     } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
 
     std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
-    std::cout << "----------------------------------------------------------------------" << std::endl;
+    std::cout << "--------------------------------------------------------------------------" << std::endl;
 
     for (const auto& studentas : studentai) {
         double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
