@@ -5,6 +5,7 @@
 #include <limits>
 #include <cctype>
 #include <algorithm>
+#include <ctime>
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -80,7 +81,7 @@ int main() {
     char autogenravimas;
     int studentuSk;
 
-    std::cout << "Ar norite sugeneruoti studentų duomenis automatiškai? (y/n): ";
+    std::cout << "Ar norite sugeneruoti studentų vardus ir pavardes automatiškai? (y/n): ";
     std::cin >> autogenravimas;
 
     if (autogenravimas == 'y' || autogenravimas == 'Y') {
@@ -115,7 +116,7 @@ int main() {
             }
 
             char generuotiPazymiusPasirinkimas;
-            std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai? (y/n): ";
+            std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai (kiekvienas studentas bus nauja eilute)? (y/n): ";
             std::cin >> generuotiPazymiusPasirinkimas;
 
             if (generuotiPazymiusPasirinkimas == 'y' || generuotiPazymiusPasirinkimas == 'Y') {

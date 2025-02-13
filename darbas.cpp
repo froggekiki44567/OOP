@@ -65,7 +65,7 @@ int main() {
     char autogenravimas;
     int studentuSk;
 
-    std::cout << "Ar norite sugeneruoti studentų duomenis automatiškai? (y/n): ";
+    std::cout << "Ar norite sugeneruoti studentų vardus ir pavardes automatiškai? (y/n): ";
     std::cin >> autogenravimas;
 
     if (autogenravimas == 'y' || autogenravimas == 'Y') {
@@ -79,7 +79,7 @@ int main() {
             for (int i = 0; i < studentuSk; i++) {
                 studentas = generuotiStudenta();
                 char generuotiPazymiusPasirinkimas;
-                std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai? (y/n): ";
+                std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai (kiekvienam studentui atskirtai spaust reikia)? (y/n): ";
                 std::cin >> generuotiPazymiusPasirinkimas;
 
                 if (generuotiPazymiusPasirinkimas == 'y' || generuotiPazymiusPasirinkimas == 'Y') {
