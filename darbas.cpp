@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -56,6 +58,54 @@ void generuotiPazymius(Student& studentas) {
         studentas.nd_balai.push_back(rand() % 11);
     }
     studentas.egzaminas = rand() % 11;
+}
+
+// funkcija kuri nuskaito studentu duomenis is failo
+std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
+    std::vector<Student> studentai;
+    std::ifstream inFile(failoPavadinimas);
+    if (inFile.is_open()) {
+        std::string line;
+        while (std::getline(inFile, line)) {
+            std::istringstream iss(line);
+            Student studentas;
+            iss >> studentas.vardas >> studentas.pavarde;
+            int pazymys;
+            while (iss >> pazymys) {
+                studentas.nd_balai.push_back(pazymys);
+            }
+            studentas.egzaminas = studentas.nd_balai.back();
+            studentas.nd_balai.pop_back();
+            studentai.push_back(studentas);
+        }
+        inFile.close();
+    } else {
+        std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
+    }
+    return studentai;
+}
+
+// funkcija kuri raso rezultatus i faila
+void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Student>& studentai) {
+    std::ofstream outFile(failoPavadinimas);
+    if (outFile.is_open()) {
+        outFile << "Vardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
+        outFile << "--------------------------------------------------------------------------" << std::endl;
+        for (const auto& studentas : studentai) {
+            double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
+            double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
+            double mediana = skaiciuotiMediana(studentas.nd_balai);
+            double galutinisMediana = 0.4 * mediana + 0.6 * studentas.egzaminas;
+
+            outFile << std::left << std::setw(12) << studentas.vardas
+                    << std::setw(14) << studentas.pavarde
+                    << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
+                    << galutinisMediana << std::endl;
+        }
+        outFile.close();
+    } else {
+        std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
+    }
 }
 
 int main() {
@@ -200,6 +250,10 @@ int main() {
                   << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
                   << galutinisMediana << std::endl;
     }
+
+    // Papildoma dalis: nuskaityti studentus iš failo ir rašyti rezultatus į failą
+    std::vector<Student> failoStudentai = nuskaitytiStudentus("studentai10000.txt");
+    rasytiRezultatus("kursiokai.txt", failoStudentai);
 
     return 0;
 }
