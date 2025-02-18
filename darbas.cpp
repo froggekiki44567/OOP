@@ -66,6 +66,8 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
     std::ifstream inFile(failoPavadinimas);
     if (inFile.is_open()) {
         std::string line;
+        // Skip the first line (header)
+        std::getline(inFile, line);
         while (std::getline(inFile, line)) {
             std::istringstream iss(line);
             Student studentas;
