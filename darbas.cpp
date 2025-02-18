@@ -71,10 +71,12 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
             Student studentas;
             iss >> studentas.vardas >> studentas.pavarde;
             int pazymys;
+            std::vector<int> pazymiai;
             while (iss >> pazymys) {
-                studentas.nd_balai.push_back(pazymys);
+                pazymiai.push_back(pazymys);
             }
-            if (!studentas.nd_balai.empty()) {
+            if (!pazymiai.empty()) {
+                studentas.nd_balai = pazymiai;
                 studentas.egzaminas = studentas.nd_balai.back();
                 studentas.nd_balai.pop_back();
                 studentai.push_back(studentas);
