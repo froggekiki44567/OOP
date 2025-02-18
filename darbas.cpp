@@ -74,9 +74,13 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
             while (iss >> pazymys) {
                 studentas.nd_balai.push_back(pazymys);
             }
-            studentas.egzaminas = studentas.nd_balai.back();
-            studentas.nd_balai.pop_back();
-            studentai.push_back(studentas);
+            if (!studentas.nd_balai.empty()) {
+                studentas.egzaminas = studentas.nd_balai.back();
+                studentas.nd_balai.pop_back();
+                studentai.push_back(studentas);
+            } else {
+                std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
+            }
         }
         inFile.close();
     } else {
