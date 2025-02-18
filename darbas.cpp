@@ -112,6 +112,24 @@ void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Stu
     }
 }
 
+// funkcija kuri spausdina rezultatus i ekrana
+void spausdintiRezultatus(const std::vector<Student>& studentai) {
+    std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
+    std::cout << "--------------------------------------------------------------------------" << std::endl;
+
+    for (const auto& studentas : studentai) {
+        double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
+        double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
+        double mediana = skaiciuotiMediana(studentas.nd_balai);
+        double galutinisMediana = 0.4 * mediana + 0.6 * studentas.egzaminas;
+
+        std::cout << std::left << std::setw(12) << studentas.vardas
+                  << std::setw(14) << studentas.pavarde
+                  << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
+                  << galutinisMediana << std::endl;
+    }
+}
+
 int main() {
     srand(time(0));
     std::vector<Student> studentai;
@@ -135,6 +153,8 @@ int main() {
                 generuotiPazymius(studentas);
                 studentai.push_back(studentas);
             }
+            // Spausdinti rezultatus į ekraną
+            spausdintiRezultatus(studentai);
             break;
         case '2':
             do {
@@ -191,32 +211,18 @@ int main() {
                 std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
                 std::cin >> pasirinkimas;
             } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
+            // Spausdinti rezultatus į ekraną
+            spausdintiRezultatus(studentai);
             break;
         case '3':
             studentai = nuskaitytiStudentus("studentai10000.txt");
+            // Rašyti rezultatus į failą
+            rasytiRezultatus("kursiokai.txt", studentai);
             break;
         default:
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
             return 1;
     }
-
-    std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
-    std::cout << "--------------------------------------------------------------------------" << std::endl;
-
-    for (const auto& studentas : studentai) {
-        double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
-        double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
-        double mediana = skaiciuotiMediana(studentas.nd_balai);
-        double galutinisMediana = 0.4 * mediana + 0.6 * studentas.egzaminas;
-
-        std::cout << std::left << std::setw(12) << studentas.vardas
-                  << std::setw(14) << studentas.pavarde
-                  << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
-                  << galutinisMediana << std::endl;
-    }
-
-    // Papildoma dalis: rašyti rezultatus į failą
-    rasytiRezultatus("kursiokai.txt", studentai);
 
     return 0;
 }
