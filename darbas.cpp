@@ -115,85 +115,40 @@ int main() {
     char autogenravimas;
     int studentuSk;
 
-    std::cout << "Ar norite sugeneruoti studentų vardus ir pavardes automatiškai? (y/n): ";
-    std::cin >> autogenravimas;
+    std::cout << "Pasirinkite veiksmą:\n";
+    std::cout << "1. Sugeneruoti studentų duomenis automatiškai\n";
+    std::cout << "2. Įvesti studentų duomenis ranka\n";
+    std::cout << "3. Nuskaityti studentų duomenis iš failo\n";
+    std::cout << "Pasirinkimas: ";
+    std::cin >> pasirinkimas;
 
-    if (autogenravimas == 'y' || autogenravimas == 'Y') {
-        std::cout << "Kiek studentų norite sugeneruoti? ";
-        std::cin >> studentuSk;
-    }
-
-    do {
-        Student studentas;
-        if (autogenravimas == 'y' || autogenravimas == 'Y') {
+    switch (pasirinkimas) {
+        case '1':
+            std::cout << "Kiek studentų norite sugeneruoti? ";
+            std::cin >> studentuSk;
             for (int i = 0; i < studentuSk; i++) {
-                studentas = generuotiStudenta();
-                char generuotiPazymiusPasirinkimas;
-                std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai (kiekvienam studentui atskirtai spaust reikia)? (y/n): ";
-                std::cin >> generuotiPazymiusPasirinkimas;
-
-                if (generuotiPazymiusPasirinkimas == 'y' || generuotiPazymiusPasirinkimas == 'Y') {
-                    generuotiPazymius(studentas);
-                } else {
-                    while (true) {
-                        std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-                        int balas;
-                        bool validInput = false;
-                        while (std::cin >> balas) {
-                            if (balas < 0 || balas > 10) {
-                                std::cout << "Įveskite balą nuo 0 iki 10!\n";
-                                std::cin.clear();
-                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                                continue;
-                            }
-                            studentas.nd_balai.push_back(balas);
-                            validInput = true;
-                        }
-                        if (!validInput && studentas.nd_balai.empty()) {
-                            std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
-                            std::cin.clear();
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        } else {
-                            break;
-                        }
-                    }
-
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                    std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
-                    while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
-                        std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    }
-                }
-
+                Student studentas = generuotiStudenta();
+                generuotiPazymius(studentas);
                 studentai.push_back(studentas);
             }
             break;
-        } else {
-            std::cout << "\nĮveskite studento vardą: ";
-            while (true) {
-                std::cin >> studentas.vardas;
-                if (Patikra(studentas.vardas)) break;
-                std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
-            }
+        case '2':
+            do {
+                Student studentas;
+                std::cout << "\nĮveskite studento vardą: ";
+                while (true) {
+                    std::cin >> studentas.vardas;
+                    if (Patikra(studentas.vardas)) break;
+                    std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
+                }
 
-            std::cout << "Įveskite studento pavardę: ";
-            while (true) {
-                std::cin >> studentas.pavarde;
-                if (Patikra(studentas.pavarde)) break;
-                std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
-            }
+                std::cout << "Įveskite studento pavardę: ";
+                while (true) {
+                    std::cin >> studentas.pavarde;
+                    if (Patikra(studentas.pavarde)) break;
+                    std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
+                }
 
-            char generuotiPazymiusPasirinkimas;
-            std::cout << "Ar norite sugeneruoti namų darbų pažymius automatiškai? (y/n): ";
-            std::cin >> generuotiPazymiusPasirinkimas;
-
-            if (generuotiPazymiusPasirinkimas == 'y' || generuotiPazymiusPasirinkimas == 'Y') {
-                generuotiPazymius(studentas);
-            } else {
                 while (true) {
                     std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
                     int balas;
@@ -226,15 +181,20 @@ int main() {
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
-            }
 
-            studentai.push_back(studentas);
+                studentai.push_back(studentas);
 
-            std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
-            std::cin >> pasirinkimas;
-        }
-
-    } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
+                std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
+                std::cin >> pasirinkimas;
+            } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
+            break;
+        case '3':
+            studentai = nuskaitytiStudentus("studentai10000.txt");
+            break;
+        default:
+            std::cout << "Neteisingas pasirinkimas!" << std::endl;
+            return 1;
+    }
 
     std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
     std::cout << "--------------------------------------------------------------------------" << std::endl;
@@ -251,9 +211,8 @@ int main() {
                   << galutinisMediana << std::endl;
     }
 
-    // Papildoma dalis: nuskaityti studentus iš failo ir rašyti rezultatus į failą
-    std::vector<Student> failoStudentai = nuskaitytiStudentus("studentai10000.txt");
-    rasytiRezultatus("kursiokai.txt", failoStudentai);
+    // Papildoma dalis: rašyti rezultatus į failą
+    rasytiRezultatus("kursiokai.txt", studentai);
 
     return 0;
 }
