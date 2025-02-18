@@ -93,7 +93,10 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
 void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Student>& studentai) {
     std::ofstream outFile(failoPavadinimas);
     if (outFile.is_open()) {
-        outFile << "Vardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
+        outFile << std::left << std::setw(12) << "Vardas" 
+                << std::setw(14) << "Pavardė" 
+                << std::setw(25) << "Galutinis (Vidurkis)" 
+                << "Galutinis (Mediana)" << std::endl;
         outFile << "--------------------------------------------------------------------------" << std::endl;
         for (const auto& studentas : studentai) {
             double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
@@ -103,7 +106,7 @@ void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Stu
 
             outFile << std::left << std::setw(12) << studentas.vardas
                     << std::setw(14) << studentas.pavarde
-                    << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
+                    << std::fixed << std::setprecision(2) << std::setw(25) << galutinisVidurkis
                     << galutinisMediana << std::endl;
         }
         outFile.close();
@@ -125,7 +128,7 @@ void spausdintiRezultatus(const std::vector<Student>& studentai) {
 
         std::cout << std::left << std::setw(12) << studentas.vardas
                   << std::setw(14) << studentas.pavarde
-                  << std::fixed << std::setprecision(2) << std::setw(20) << galutinisVidurkis
+                  << std::fixed << std::setprecision(2) << std::setw(25) << galutinisVidurkis
                   << galutinisMediana << std::endl;
     }
 }
