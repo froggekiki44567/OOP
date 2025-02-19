@@ -146,20 +146,32 @@ bool palygintiPagalPavarde(const Student& a, const Student& b) {
     return a.pavarde < b.pavarde;
 }
 
-bool palygintiPagalVidurki(const Student& a, const Student& b) {
+bool palygintiPagalVidurkiAsc(const Student& a, const Student& b) {
     double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
     double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
     return vidurkisA < vidurkisB;
 }
 
-bool palygintiPagalMediana(const Student& a, const Student& b) {
+bool palygintiPagalVidurkiDesc(const Student& a, const Student& b) {
+    double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
+    double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
+    return vidurkisA > vidurkisB;
+}
+
+bool palygintiPagalMedianaAsc(const Student& a, const Student& b) {
     double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
     double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
     return medianaA < medianaB;
 }
 
+bool palygintiPagalMedianaDesc(const Student& a, const Student& b) {
+    double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
+    double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
+    return medianaA > medianaB;
+}
+
 // funkcija kuri rikiuoja studentus pagal pasirinkima
-void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas) {
+void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas, char tvarka) {
     switch (pasirinkimas) {
         case '1':
             std::sort(studentai.begin(), studentai.end(), palygintiPagalVarda);
@@ -168,10 +180,18 @@ void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas) {
             std::sort(studentai.begin(), studentai.end(), palygintiPagalPavarde);
             break;
         case '3':
-            std::sort(studentai.begin(), studentai.end(), palygintiPagalVidurki);
+            if (tvarka == 'a' || tvarka == 'A') {
+                std::sort(studentai.begin(), studentai.end(), palygintiPagalVidurkiAsc);
+            } else {
+                std::sort(studentai.begin(), studentai.end(), palygintiPagalVidurkiDesc);
+            }
             break;
         case '4':
-            std::sort(studentai.begin(), studentai.end(), palygintiPagalMediana);
+            if (tvarka == 'a' || tvarka == 'A') {
+                std::sort(studentai.begin(), studentai.end(), palygintiPagalMedianaAsc);
+            } else {
+                std::sort(studentai.begin(), studentai.end(), palygintiPagalMedianaDesc);
+            }
             break;
         default:
             std::cerr << "Neteisingas pasirinkimas!" << std::endl;
@@ -276,7 +296,16 @@ int main() {
     std::cout << "Pasirinkimas: ";
     std::cin >> rikiavimoPasirinkimas;
 
-    rikiuotiStudentus(studentai, rikiavimoPasirinkimas);
+    char tvarka = 'a';
+    if (rikiavimoPasirinkimas == '3' || rikiavimoPasirinkimas == '4') {
+        std::cout << "Pasirinkite rikiavimo tvarką:\n";
+        std::cout << "a. Didėjimo tvarka\n";
+        std::cout << "d. Mažėjimo tvarka\n";
+        std::cout << "Pasirinkimas: ";
+        std::cin >> tvarka;
+    }
+
+    rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
 
     // Pasirinkti išvesties būdą
     char outputChoice;
