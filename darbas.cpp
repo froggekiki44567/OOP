@@ -223,8 +223,18 @@ int main() {
             break;
         case '3':
             studentai = nuskaitytiStudentus("studentai10000.txt");
-            // Rašyti rezultatus į failą
-            rasytiRezultatus("kursiokai.txt", studentai);
+            char outputChoice;
+            std::cout << "Ar norite spausdinti rezultatus į ekraną ar į failą? (e/f): ";
+            std::cin >> outputChoice;
+            if (outputChoice == 'e' || outputChoice == 'E') {
+                // Spausdinti rezultatus į ekraną
+                spausdintiRezultatus(studentai);
+            } else if (outputChoice == 'f' || outputChoice == 'F') {
+                // Rašyti rezultatus į failą
+                rasytiRezultatus("kursiokai.txt", studentai);
+            } else {
+                std::cout << "Neteisingas pasirinkimas!" << std::endl;
+            }
             break;
         default:
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
