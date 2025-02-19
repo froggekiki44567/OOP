@@ -137,6 +137,39 @@ void spausdintiRezultatus(const std::vector<Student>& studentai) {
     }
 }
 
+// funkcija kuri rikiuoja studentus pagal pasirinkima
+void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas) {
+    switch (pasirinkimas) {
+        case '1':
+            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
+                return a.vardas < b.vardas;
+            });
+            break;
+        case '2':
+            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
+                return a.pavarde < b.pavarde;
+            });
+            break;
+        case '3':
+            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
+                double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
+                double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
+                return vidurkisA < vidurkisB;
+            });
+            break;
+        case '4':
+            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
+                double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
+                double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
+                return medianaA < medianaB;
+            });
+            break;
+        default:
+            std::cerr << "Neteisingas pasirinkimas!" << std::endl;
+            break;
+    }
+}
+
 int main() {
     srand(time(0));
     std::vector<Student> studentai;
@@ -240,6 +273,18 @@ int main() {
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
             return 1;
     }
+
+    // Rikiuoti studentus pagal pasirinkimą
+    char rikiavimoPasirinkimas;
+    std::cout << "Pasirinkite rikiavimo būdą:\n";
+    std::cout << "1. Pagal vardą\n";
+    std::cout << "2. Pagal pavardę\n";
+    std::cout << "3. Pagal galutinį vidurkį\n";
+    std::cout << "4. Pagal galutinę medianą\n";
+    std::cout << "Pasirinkimas: ";
+    std::cin >> rikiavimoPasirinkimas;
+
+    rikiuotiStudentus(studentai, rikiavimoPasirinkimas);
 
     return 0;
 }
