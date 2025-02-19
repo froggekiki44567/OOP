@@ -137,32 +137,41 @@ void spausdintiRezultatus(const std::vector<Student>& studentai) {
     }
 }
 
+// palyginimo funkcijos rikiavimui
+bool palygintiPagalVarda(const Student& a, const Student& b) {
+    return a.vardas < b.vardas;
+}
+
+bool palygintiPagalPavarde(const Student& a, const Student& b) {
+    return a.pavarde < b.pavarde;
+}
+
+bool palygintiPagalVidurki(const Student& a, const Student& b) {
+    double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
+    double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
+    return vidurkisA < vidurkisB;
+}
+
+bool palygintiPagalMediana(const Student& a, const Student& b) {
+    double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
+    double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
+    return medianaA < medianaB;
+}
+
 // funkcija kuri rikiuoja studentus pagal pasirinkima
 void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas) {
     switch (pasirinkimas) {
         case '1':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                return a.vardas < b.vardas;
-            });
+            std::sort(studentai.begin(), studentai.end(), palygintiPagalVarda);
             break;
         case '2':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                return a.pavarde < b.pavarde;
-            });
+            std::sort(studentai.begin(), studentai.end(), palygintiPagalPavarde);
             break;
         case '3':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
-                double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
-                return vidurkisA < vidurkisB;
-            });
+            std::sort(studentai.begin(), studentai.end(), palygintiPagalVidurki);
             break;
         case '4':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
-                double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
-                return medianaA < medianaB;
-            });
+            std::sort(studentai.begin(), studentai.end(), palygintiPagalMediana);
             break;
         default:
             std::cerr << "Neteisingas pasirinkimas!" << std::endl;
