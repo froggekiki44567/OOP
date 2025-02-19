@@ -66,8 +66,6 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
     std::ifstream inFile(failoPavadinimas);
     if (inFile.is_open()) {
         std::string line;
-        // Skip the first line (header)
-        std::getline(inFile, line);
         while (std::getline(inFile, line)) {
             std::istringstream iss(line);
             Student studentas;
@@ -134,39 +132,6 @@ void spausdintiRezultatus(const std::vector<Student>& studentai) {
                   << std::setw(14) << studentas.pavarde
                   << std::fixed << std::setprecision(2) << std::setw(25) << galutinisVidurkis
                   << galutinisMediana << std::endl;
-    }
-}
-
-// funkcija kuri rikiuoja studentus pagal pasirinkima
-void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas) {
-    switch (pasirinkimas) {
-        case '1':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                return a.vardas < b.vardas;
-            });
-            break;
-        case '2':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                return a.pavarde < b.pavarde;
-            });
-            break;
-        case '3':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                double vidurkisA = 0.4 * skaiciuotiVidurki(a.nd_balai) + 0.6 * a.egzaminas;
-                double vidurkisB = 0.4 * skaiciuotiVidurki(b.nd_balai) + 0.6 * b.egzaminas;
-                return vidurkisA < vidurkisB;
-            });
-            break;
-        case '4':
-            std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {
-                double medianaA = 0.4 * skaiciuotiMediana(a.nd_balai) + 0.6 * a.egzaminas;
-                double medianaB = 0.4 * skaiciuotiMediana(b.nd_balai) + 0.6 * b.egzaminas;
-                return medianaA < medianaB;
-            });
-            break;
-        default:
-            std::cerr << "Neteisingas pasirinkimas!" << std::endl;
-            break;
     }
 }
 
@@ -256,35 +221,13 @@ int main() {
             break;
         case '3':
             studentai = nuskaitytiStudentus("studentai10000.txt");
-            char outputChoice;
-            std::cout << "Ar norite spausdinti rezultatus į ekraną ar į failą? (e/f): ";
-            std::cin >> outputChoice;
-            if (outputChoice == 'e' || outputChoice == 'E') {
-                // Spausdinti rezultatus į ekraną
-                spausdintiRezultatus(studentai);
-            } else if (outputChoice == 'f' || outputChoice == 'F') {
-                // Rašyti rezultatus į failą
-                rasytiRezultatus("kursiokai.txt", studentai);
-            } else {
-                std::cout << "Neteisingas pasirinkimas!" << std::endl;
-            }
+            // Rašyti rezultatus į failą
+            rasytiRezultatus("kursiokai.txt", studentai);
             break;
         default:
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
             return 1;
     }
-
-    // Rikiuoti studentus pagal pasirinkimą
-    char rikiavimoPasirinkimas;
-    std::cout << "Pasirinkite rikiavimo būdą:\n";
-    std::cout << "1. Pagal vardą\n";
-    std::cout << "2. Pagal pavardę\n";
-    std::cout << "3. Pagal galutinį vidurkį\n";
-    std::cout << "4. Pagal galutinę medianą\n";
-    std::cout << "Pasirinkimas: ";
-    std::cin >> rikiavimoPasirinkimas;
-
-    rikiuotiStudentus(studentai, rikiavimoPasirinkimas);
 
     return 0;
 }
