@@ -62,22 +62,33 @@ void generuotiPazymius(Student& studentas) {
 }
 
 // funkcija kuri nuskaito studentu duomenis is failo
-std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
+std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, double& skaitymoLaikas) {
     auto start = std::chrono::high_resolution_clock::now(); // Start timing
 
     std::vector<Student> studentai;
-    std::ifstream inFile(failoPavadinimas);
+    std::ifstream inFile(failoPavadinimas, std::ios::in | std::ios::binary);
     if (inFile.is_open()) {
+        // Get the size of the file
+        inFile.seekg(0, std::ios::end);
+        size_t fileSize = inFile.tellg();
+        inFile.seekg(0, std::ios::beg);
+
+        // Read the entire file content into a string
+        std::string fileContent(fileSize, '\0');
+        inFile.read(&fileContent[0], fileSize);
+        inFile.close();
+
+        std::istringstream iss(fileContent);
         std::string line;
         // Skip the first line (header)
-        std::getline(inFile, line);
-        while (std::getline(inFile, line)) {
-            std::istringstream iss(line);
+        std::getline(iss, line);
+        while (std::getline(iss, line)) {
+            std::istringstream lineStream(line);
             Student studentas;
-            iss >> studentas.vardas >> studentas.pavarde;
+            lineStream >> studentas.vardas >> studentas.pavarde;
             int pazymys;
             std::vector<int> pazymiai;
-            while (iss >> pazymys) {
+            while (lineStream >> pazymys) {
                 pazymiai.push_back(pazymys);
             }
             if (!pazymiai.empty()) {
@@ -89,14 +100,13 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas) {
                 std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
             }
         }
-        inFile.close();
     } else {
         std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
     }
 
     auto end = std::chrono::high_resolution_clock::now(); // End timing
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;
+    skaitymoLaikas = duration.count();
 
     return studentai;
 }
@@ -130,7 +140,6 @@ void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Stu
 
     auto end = std::chrono::high_resolution_clock::now(); // End timing
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo rašymas užtruko: " << duration.count() << " sekundžių." << std::endl;
 }
 
 // funkcija kuri spausdina rezultatus i ekrana
@@ -292,9 +301,21 @@ int main() {
                 std::cin >> pasirinkimas;
             } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
             break;
-        case '3':
-            studentai = nuskaitytiStudentus("studentai10000.txt");
+        case '3': {
+            double skaitymoLaikas1, skaitymoLaikas2, skaitymoLaikas3;
+            std::vector<Student> studentai1 = nuskaitytiStudentus("studentai10000.txt", skaitymoLaikas1);
+            std::vector<Student> studentai2 = nuskaitytiStudentus("studentai100000.txt", skaitymoLaikas2);
+            std::vector<Student> studentai3 = nuskaitytiStudentus("studentai1000000.txt", skaitymoLaikas3);
+
+            double vidutinisSkaitymoLaikas = (skaitymoLaikas1 + skaitymoLaikas2 + skaitymoLaikas3) / 3.0;
+            std::cout << "Vidutinis failų skaitymo laikas: " << vidutinisSkaitymoLaikas << " sekundžių." << std::endl;
+
+            // Combine all students into one vector
+            studentai.insert(studentai.end(), studentai1.begin(), studentai1.end());
+            studentai.insert(studentai.end(), studentai2.begin(), studentai2.end());
+            studentai.insert(studentai.end(), studentai3.begin(), studentai3.end());
             break;
+        }
         default:
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
             return 1;
