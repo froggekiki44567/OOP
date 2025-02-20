@@ -9,6 +9,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <chrono> // Add this include for timing
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -201,125 +202,65 @@ void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas, char 
 
 int main() {
     srand(time(0));
-    std::vector<Student> studentai;
-    char pasirinkimas;
-    int studentuSk;
+    std::vector<std::string> testFiles = {"studentai100000.txt", "studentai10000.txt", "studentai10000.txt"};
+    int numTests = 5;
+    double totalTime = 0.0;
 
-    std::cout << "Pasirinkite veiksmą:\n";
-    std::cout << "1. Sugeneruoti studentų duomenis automatiškai\n";
-    std::cout << "2. Įvesti studentų duomenis ranka\n";
-    std::cout << "3. Nuskaityti studentų duomenis iš failo\n";
-    std::cout << "Pasirinkimas: ";
-    std::cin >> pasirinkimas;
+    for (const auto& file : testFiles) {
+        double fileTotalTime = 0.0;
+        for (int i = 0; i < numTests; ++i) {
+            auto start = std::chrono::high_resolution_clock::now();
 
-    switch (pasirinkimas) {
-        case '1':
-            std::cout << "Kiek studentų norite sugeneruoti? ";
-            std::cin >> studentuSk;
-            for (int i = 0; i < studentuSk; i++) {
-                Student studentas = generuotiStudenta();
-                generuotiPazymius(studentas);
-                studentai.push_back(studentas);
+            std::vector<Student> studentai = nuskaitytiStudentus(file);
+
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end - start;
+            fileTotalTime += duration.count();
+
+            std::cout << "Failo " << file << " atidarymas ir nuskaitymas užtruko: " << duration.count() << " sekundžių\n";
+
+            // Rikiuoti studentus pagal pasirinkimą
+            char rikiavimoPasirinkimas;
+            std::cout << "Pasirinkite rikiavimo būdą:\n";
+            std::cout << "1. Pagal vardą\n";
+            std::cout << "2. Pagal pavardę\n";
+            std::cout << "3. Pagal galutinį vidurkį\n";
+            std::cout << "4. Pagal galutinę medianą\n";
+            std::cout << "Pasirinkimas: ";
+            std::cin >> rikiavimoPasirinkimas;
+
+            char tvarka = 'a';
+            if (rikiavimoPasirinkimas == '3' || rikiavimoPasirinkimas == '4') {
+                std::cout << "Pasirinkite rikiavimo tvarką:\n";
+                std::cout << "a. Didėjimo tvarka\n";
+                std::cout << "d. Mažėjimo tvarka\n";
+                std::cout << "Pasirinkimas: ";
+                std::cin >> tvarka;
             }
-            break;
-        case '2':
-            do {
-                Student studentas;
-                std::cout << "\nĮveskite studento vardą: ";
-                while (true) {
-                    std::cin >> studentas.vardas;
-                    if (Patikra(studentas.vardas)) break;
-                    std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
-                }
 
-                std::cout << "Įveskite studento pavardę: ";
-                while (true) {
-                    std::cin >> studentas.pavarde;
-                    if (Patikra(studentas.pavarde)) break;
-                    std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
-                }
+            rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
 
-                while (true) {
-                    std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-                    int balas;
-                    bool validInput = false;
-                    while (std::cin >> balas) {
-                        if (balas < 0 || balas > 10) {
-                            std::cout << "Įveskite balą nuo 0 iki 10!\n";
-                            std::cin.clear();
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                            continue;
-                        }
-                        studentas.nd_balai.push_back(balas);
-                        validInput = true;
-                    }
-                    if (!validInput && studentas.nd_balai.empty()) {
-                        std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    } else {
-                        break;
-                    }
-                }
-
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-                std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
-                while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
-                    std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                }
-
-                studentai.push_back(studentas);
-
-                std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
-                std::cin >> pasirinkimas;
-            } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
-            break;
-        case '3':
-            studentai = nuskaitytiStudentus("studentai10000.txt");
-            break;
-        default:
-            std::cout << "Neteisingas pasirinkimas!" << std::endl;
-            return 1;
+            // Pasirinkti išvesties būdą
+            char outputChoice;
+            std::cout << "Ar norite spausdinti rezultatus į ekraną ar į failą? (e/f): ";
+            std::cin >> outputChoice;
+            if (outputChoice == 'e' || outputChoice == 'E') {
+                // Spausdinti rezultatus į ekraną
+                spausdintiRezultatus(studentai);
+            } else if (outputChoice == 'f' || outputChoice == 'F') {
+                // Rašyti rezultatus į failą
+                rasytiRezultatus("kursiokai.txt", studentai);
+            } else {
+                std::cout << "Neteisingas pasirinkimas!" << std::endl;
+            }
+        }
+        double averageTime = fileTotalTime / numTests;
+        totalTime += averageTime;
+        std::cout << "Vidutinis laikas failui " << file << ": " << averageTime << " sekundžių\n";
     }
 
-    // Rikiuoti studentus pagal pasirinkimą
-    char rikiavimoPasirinkimas;
-    std::cout << "Pasirinkite rikiavimo būdą:\n";
-    std::cout << "1. Pagal vardą\n";
-    std::cout << "2. Pagal pavardę\n";
-    std::cout << "3. Pagal galutinį vidurkį\n";
-    std::cout << "4. Pagal galutinę medianą\n";
-    std::cout << "Pasirinkimas: ";
-    std::cin >> rikiavimoPasirinkimas;
-
-    char tvarka = 'a';
-    if (rikiavimoPasirinkimas == '3' || rikiavimoPasirinkimas == '4') {
-        std::cout << "Pasirinkite rikiavimo tvarką:\n";
-        std::cout << "a. Didėjimo tvarka\n";
-        std::cout << "d. Mažėjimo tvarka\n";
-        std::cout << "Pasirinkimas: ";
-        std::cin >> tvarka;
-    }
-
-    rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
-
-    // Pasirinkti išvesties būdą
-    char outputChoice;
-    std::cout << "Ar norite spausdinti rezultatus į ekraną ar į failą? (e/f): ";
-    std::cin >> outputChoice;
-    if (outputChoice == 'e' || outputChoice == 'E') {
-        // Spausdinti rezultatus į ekraną
-        spausdintiRezultatus(studentai);
-    } else if (outputChoice == 'f' || outputChoice == 'F') {
-        // Rašyti rezultatus į failą
-        rasytiRezultatus("kursiokai.txt", studentai);
-    } else {
-        std::cout << "Neteisingas pasirinkimas!" << std::endl;
-    }
+    double overallAverageTime = totalTime / testFiles.size();
+    std::cout << "Bendras vidutinis laikas: " << overallAverageTime << " sekundžių\n";
 
     return 0;
 }
