@@ -68,19 +68,19 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
     std::vector<Student> studentai;
     std::ifstream inFile(failoPavadinimas, std::ios::in | std::ios::binary);
     if (inFile.is_open()) {
-        // Get the size of the file
+        //dydis failo
         inFile.seekg(0, std::ios::end);
         size_t fileSize = inFile.tellg();
         inFile.seekg(0, std::ios::beg);
 
-        // Read the entire file content into a string
+        // perskaitymas i string
         std::string fileContent(fileSize, '\0');
         inFile.read(&fileContent[0], fileSize);
         inFile.close();
 
         std::istringstream iss(fileContent);
         std::string line;
-        // Skip the first line (header)
+       
         std::getline(iss, line);
         while (std::getline(iss, line)) {
             std::istringstream lineStream(line);
@@ -104,7 +104,7 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
         std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
     }
 
-    auto end = std::chrono::high_resolution_clock::now(); // End timing
+    auto end = std::chrono::high_resolution_clock::now(); 
     std::chrono::duration<double> duration = end - start;
     skaitymoLaikas = duration.count();
 
@@ -113,24 +113,24 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
 
 // funkcija kuri raso rezultatus i faila
 void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Student>& studentai) {
-    auto start = std::chrono::high_resolution_clock::now(); // Start timing
+    auto start = std::chrono::high_resolution_clock::now(); 
 
     std::ofstream outFile(failoPavadinimas);
     if (outFile.is_open()) {
-        outFile << std::left << std::setw(12) << "Vardas" 
-                << std::setw(14) << "Pavardė" 
-                << std::setw(25) << "Galutinis (Vidurkis)" 
+        outFile << std::left << std::setw(20) << "Vardas" 
+                << std::setw(20) << "Pavardė" 
+                << std::setw(30) << "Galutinis (Vidurkis)" 
                 << "Galutinis (Mediana)" << std::endl;
-        outFile << "--------------------------------------------------------------------------" << std::endl;
+        outFile << "-------------------------------------------------------------------------------" << std::endl;
         for (const auto& studentas : studentai) {
             double vidurkis = skaiciuotiVidurki(studentas.nd_balai);
             double galutinisVidurkis = 0.4 * vidurkis + 0.6 * studentas.egzaminas;
             double mediana = skaiciuotiMediana(studentas.nd_balai);
             double galutinisMediana = 0.4 * mediana + 0.6 * studentas.egzaminas;
 
-            outFile << std::left << std::setw(12) << studentas.vardas
-                    << std::setw(14) << studentas.pavarde
-                    << std::fixed << std::setprecision(2) << std::setw(25) << galutinisVidurkis
+            outFile << std::left << std::setw(20) << studentas.vardas
+                    << std::setw(20) << studentas.pavarde
+                    << std::fixed << std::setprecision(2) << std::setw(30) << galutinisVidurkis
                     << galutinisMediana << std::endl;
         }
         outFile.close();
@@ -138,8 +138,9 @@ void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Stu
         std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
     }
 
-    auto end = std::chrono::high_resolution_clock::now(); // End timing
+    auto end = std::chrono::high_resolution_clock::now(); 
     std::chrono::duration<double> duration = end - start;
+    std::cout << "Failo rašymas užtruko: " << duration.count() << " sekundžių." << std::endl;
 }
 
 // funkcija kuri spausdina rezultatus i ekrana
@@ -310,10 +311,25 @@ int main() {
             double vidutinisSkaitymoLaikas = (skaitymoLaikas1 + skaitymoLaikas2 + skaitymoLaikas3) / 3.0;
             std::cout << "Vidutinis failų skaitymo laikas: " << vidutinisSkaitymoLaikas << " sekundžių." << std::endl;
 
-            // Combine all students into one vector
-            studentai.insert(studentai.end(), studentai1.begin(), studentai1.end());
-            studentai.insert(studentai.end(), studentai2.begin(), studentai2.end());
-            studentai.insert(studentai.end(), studentai3.begin(), studentai3.end());
+            std::string failoPavadinimas;
+            std::cout << "Pasirinkite failą naudojimui (1, 2 arba 3): ";
+            int failoPasirinkimas;
+            std::cin >> failoPasirinkimas;
+
+            switch (failoPasirinkimas) {
+                case 1:
+                    studentai = studentai1;
+                    break;
+                case 2:
+                    studentai = studentai2;
+                    break;
+                case 3:
+                    studentai = studentai3;
+                    break;
+                default:
+                    std::cout << "Neteisingas pasirinkimas!" << std::endl;
+                    return 1;
+            }
             break;
         }
         default:
