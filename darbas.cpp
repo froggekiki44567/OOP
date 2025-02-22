@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <string>
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -66,38 +67,35 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
     auto start = std::chrono::high_resolution_clock::now(); // Start timing
 
     std::vector<Student> studentai;
-    std::ifstream inFile(failoPavadinimas, std::ios::in | std::ios::binary);
+    std::ifstream inFile(failoPavadinimas);
+    
     if (inFile.is_open()) {
-        //dydis failo
-        inFile.seekg(0, std::ios::end);
-        size_t fileSize = inFile.tellg();
-        inFile.seekg(0, std::ios::beg);
-
-        // perskaitymas i string
-        std::string fileContent(fileSize, '\0');
-        inFile.read(&fileContent[0], fileSize);
+        std::stringstream buffer;
+        buffer << inFile.rdbuf();
         inFile.close();
 
-        std::istringstream iss(fileContent);
         std::string line;
-       
-        std::getline(iss, line);
-        while (std::getline(iss, line)) {
-            std::istringstream lineStream(line);
-            Student studentas;
-            lineStream >> studentas.vardas >> studentas.pavarde;
-            int pazymys;
-            std::vector<int> pazymiai;
-            while (lineStream >> pazymys) {
-                pazymiai.push_back(pazymys);
-            }
-            if (!pazymiai.empty()) {
-                studentas.nd_balai = pazymiai;
-                studentas.egzaminas = studentas.nd_balai.back();
-                studentas.nd_balai.pop_back();
-                studentai.push_back(studentas);
-            } else {
-                std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
+      
+        std::getline(buffer, line);
+        while (buffer) {
+            std::getline(buffer, line);
+            if (!buffer.eof()) {
+
+                Student studentas;
+                buffer >> studentas.vardas >> studentas.pavarde;
+                int pazymys;
+                std::vector<int> pazymiai;
+                while (buffer >> pazymys) {
+                    pazymiai.push_back(pazymys);
+                }
+                if (!pazymiai.empty()) {
+                    studentas.nd_balai = pazymiai;
+                    studentas.egzaminas = studentas.nd_balai.back();
+                    studentas.nd_balai.pop_back();
+                    studentai.push_back(studentas);
+                } else {
+                    std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
+                }
             }
         }
     } else {
