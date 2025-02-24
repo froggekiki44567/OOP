@@ -80,7 +80,6 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
         while (buffer) {
             std::getline(buffer, line);
             if (!buffer.eof()) {
-
                 Student studentas;
                 buffer >> studentas.vardas >> studentas.pavarde;
                 int pazymys;
