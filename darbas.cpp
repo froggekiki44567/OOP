@@ -232,7 +232,6 @@ void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas, char 
 }
 
 int main() {
-    srand(time(0));
     std::vector<Student> studentai;
     char pasirinkimas;
     int studentuSk;
