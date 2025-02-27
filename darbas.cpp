@@ -50,26 +50,28 @@ Student generuotiStudenta() {
     std::string vardai[] = {"Jonas", "Petras", "Ona", "Ieva", "Marius"};
     std::string pavardes[] = {"Jonaitis", "Petraitis", "Onaitė", "Ievaitė", "Maraitis"};
 
-    std::mt19937 mt(1729);
-    std::uniform_int_distribution<> dis(0, 4);
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<> dist(0, 4);
 
-    studentas.vardas = vardai[dis(mt)];
-    studentas.pavarde = pavardes[dis(mt)];
+    studentas.vardas = vardai[dist(mt)];
+    studentas.pavarde = pavardes[dist(mt)];
     return studentas;
 }
 
 // funkcija generuoti atsitiktinius namų darbų pažymius
 void generuotiPazymius(Student& studentas) {
    
-    std::mt19937 mt(1729);
-    std::uniform_int_distribution<> dis(0, 10);
-    std::uniform_int_distribution<> nd_dis(0, 5);
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<> dist(0, 10);
+    std::uniform_int_distribution<> nd_dist(0, 5);
 
-    int nd_kiekis = nd_dis(mt);
+    int nd_kiekis = nd_dist(mt);
     for (int i = 0; i < nd_kiekis; i++) {
-        studentas.nd_balai.push_back(dis(mt));
+        studentas.nd_balai.push_back(dist(mt));
     }
-    studentas.egzaminas = dis(mt);
+    studentas.egzaminas = dist(mt);
 }
 
 // funkcija kuri nuskaito studentu duomenis is failo
