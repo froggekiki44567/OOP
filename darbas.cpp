@@ -11,7 +11,7 @@
 #include <sstream>
 #include <chrono>
 #include <string>
-#include <random> // Include the random header
+#include <random>
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -74,8 +74,7 @@ void generuotiPazymius(Student& studentas) {
 
 // funkcija kuri nuskaito studentu duomenis is failo
 std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, double& skaitymoLaikas) {
-    auto start = std::chrono::high_resolution_clock::now(); // Start timing
-
+    auto start = std::chrono::high_resolution_clock::now();
     std::vector<Student> studentai;
     std::ifstream inFile(failoPavadinimas);
     
