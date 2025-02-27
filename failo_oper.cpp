@@ -59,10 +59,14 @@ std::vector<Student> nuskaitytiStudentusIsFailu(const std::vector<std::string>& 
     // Nuskaityti visus failus
     for (const auto& failas : failuPavadinimai) {
         double laikas;
+        try{
         std::vector<Student> studentai = nuskaitytiStudentus(failas, laikas);
         visiStudentai.push_back(studentai);
         skaitymoLaikai.push_back(laikas);
         std::cout << "Failo " << failas << " skaitymo laikas: " << laikas << " sekundžių." << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Klaida skaitant failą: " << failas << e.what() << std::endl;
+        }
     }
     
     // Skaičiuoti vidutinį skaitymo laiką

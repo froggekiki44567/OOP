@@ -17,6 +17,7 @@ int main() {
     std::cout << "Pasirinkimas: ";
     std::cin >> pasirinkimas;
 
+    
     switch (pasirinkimas) {
         case '1': {
             int studentuSk;
