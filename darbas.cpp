@@ -11,6 +11,7 @@
 #include <sstream>
 #include <chrono>
 #include <string>
+#include <random> // Include the random header
 
 // struktura kuri saugo studento duomenis
 struct Student {
@@ -48,18 +49,28 @@ Student generuotiStudenta() {
     Student studentas;
     std::string vardai[] = {"Jonas", "Petras", "Ona", "Ieva", "Marius"};
     std::string pavardes[] = {"Jonaitis", "Petraitis", "Onaitė", "Ievaitė", "Maraitis"};
-    studentas.vardas = vardai[rand() % 5];
-    studentas.pavarde = pavardes[rand() % 5];
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 4);
+
+    studentas.vardas = vardai[dis(gen)];
+    studentas.pavarde = pavardes[dis(gen)];
     return studentas;
 }
 
 // funkcija generuoti atsitiktinius namų darbų pažymius
 void generuotiPazymius(Student& studentas) {
-    int nd_kiekis = rand() % 5 + 1;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 10);
+    std::uniform_int_distribution<> nd_dis(1, 5);
+
+    int nd_kiekis = nd_dis(gen);
     for (int i = 0; i < nd_kiekis; i++) {
-        studentas.nd_balai.push_back(rand() % 11);
+        studentas.nd_balai.push_back(dis(gen));
     }
-    studentas.egzaminas = rand() % 11;
+    studentas.egzaminas = dis(gen);
 }
 
 // funkcija kuri nuskaito studentu duomenis is failo
