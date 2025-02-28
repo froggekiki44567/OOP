@@ -225,6 +225,8 @@ void rikiuotiStudentus(std::vector<Student>& studentai, char pasirinkimas, char 
 }
 
 void rikiuotiStudentusPagalPasirinkima(std::vector<Student>& studentai) {
+   
+    
     char rikiavimoPasirinkimas;
     std::cout << "Pasirinkite rikiavimo būdą:\n";
     std::cout << "1. Pagal vardą\n";
