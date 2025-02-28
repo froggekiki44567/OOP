@@ -1,4 +1,4 @@
-// file_operations.cpp - Implementation of file input/output operations
+// cia funkcijos susijusios su failu operacijomis
 #include "failo_oper.h"
 #include <fstream>
 #include <sstream>

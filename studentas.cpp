@@ -1,4 +1,4 @@
-// student.cpp - Implementation of student-related functions
+// funkcijos skirtos dirbti su studentais(irasymas, generavimas, gal. skaiciaviavimas, lyginimas)
 #include "studentas.h"
 #include "papild.h"
 #include <algorithm>

@@ -1,4 +1,4 @@
-// student.h - Student structure and related functions
+
 #ifndef STUDENTAS_H
 #define STUDENTAS_H
 

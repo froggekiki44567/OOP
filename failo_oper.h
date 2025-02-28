@@ -1,6 +1,6 @@
-// file_operations.h - File input/output operations
-#ifndef FILE_OPERATIONS_H
-#define FILE_OPERATIONS_H
+
+#ifndef FAILO_OPER_H
+#define FAILO_OPER_H
 
 #include "studentas.h"
 #include <string>
@@ -14,4 +14,4 @@ void spausdintiRezultatus(const std::vector<Student>& studentai);
 void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Student>& studentai);
 void pasirinktIšvestiesBuda(const std::vector<Student>& studentai);
 
-#endif // FILE_OPERATIONS_H
+#endif
