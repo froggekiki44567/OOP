@@ -9,44 +9,55 @@
 std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, double& skaitymoLaikas) {
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<Student> studentai;
-    std::ifstream inFile(failoPavadinimas);
-    
-    if (inFile.is_open()) {
+
+    try {
+        std::ifstream inFile(failoPavadinimas);
+        if (!inFile) {
+            throw std::runtime_error("Nepavyko atidaryti failo: " + failoPavadinimas);
+        }
+
         std::stringstream buffer;
         buffer << inFile.rdbuf();
         inFile.close();
 
         std::string line;
         // Praleisti antraštės eilutę
-        std::getline(buffer, line);
-        
-        while (buffer) {
-            std::getline(buffer, line);
-            if (!buffer.eof()) {
-                Student studentas;
-                std::stringstream ss(line);
-                ss >> studentas.vardas >> studentas.pavarde;
-                int pazymys;
-                std::vector<int> pazymiai;
-                while (ss >> pazymys) {
-                    pazymiai.push_back(pazymys);
-                }
-                if (!pazymiai.empty()) {
-                    studentas.nd_balai = std::vector<int>(pazymiai.begin(), pazymiai.end()-1);
-                    studentas.egzaminas = pazymiai.back();
-                    studentai.push_back(studentas);
-                } else {
-                    std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
-                }
-            }
+        if (!std::getline(buffer, line)) {
+            throw std::runtime_error("Failas tuščias arba sugadintas: " + failoPavadinimas);
         }
-    } else {
-        std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
+
+        while (std::getline(buffer, line)) {
+            Student studentas;
+            std::stringstream ss(line);
+            ss >> studentas.vardas >> studentas.pavarde;
+
+            if (ss.fail()) {
+                std::cerr << "Klaida skaitant studento duomenis eilutėje: " << line << std::endl;
+                continue;  // Pereiname prie kitos eilutės
+            }
+
+            int pazymys;
+            std::vector<int> pazymiai;
+            while (ss >> pazymys) {
+                pazymiai.push_back(pazymys);
+            }
+
+            if (pazymiai.empty()) {
+                std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
+                continue;  // Pereiname prie kitos eilutės
+            }
+
+            studentas.nd_balai = std::vector<int>(pazymiai.begin(), pazymiai.end() - 1);
+            studentas.egzaminas = pazymiai.back();
+            studentai.push_back(studentas);
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Klaida nuskaitant studentus: " << e.what() << std::endl;
     }
 
-    auto end = std::chrono::high_resolution_clock::now(); 
-    std::chrono::duration<double> duration = end - start;
-    skaitymoLaikas = duration.count();
+    auto end = std::chrono::high_resolution_clock::now();
+    skaitymoLaikas = std::chrono::duration<double>(end - start).count();
 
     return studentai;
 }

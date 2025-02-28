@@ -68,54 +68,98 @@ std::vector<Student> generuotiStudentus(int kiekis) {
 std::vector<Student> ivestiStudentus() {
     std::vector<Student> studentai;
     char pasirinkimas;
-    
+
     do {
         Student studentas;
-        std::cout << "\nĮveskite studento vardą: ";
-        while (true) {
-            std::cin >> studentas.vardas;
-            if (tikrintiRaides(studentas.vardas)) break;
-            std::cout << "Vardas turi būti sudarytas tik iš raidžių. Bandykite dar kartą: ";
-        }
 
-        std::cout << "Įveskite studento pavardę: ";
+        // Input student name
         while (true) {
-            std::cin >> studentas.pavarde;
-            if (tikrintiRaides(studentas.pavarde)) break;
-            std::cout << "Pavardė turi būti sudaryta tik iš raidžių. Bandykite dar kartą: ";
-        }
+            try {
+                std::cout << "\nĮveskite studento vardą: ";
+                std::cin >> studentas.vardas;
 
-        while (true) {
-            std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
-            int balas;
-            bool validInput = false;
-            while (std::cin >> balas) {
-                if (balas < 0 || balas > 10) {
-                    std::cout << "Įveskite balą nuo 0 iki 10!\n";
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    continue;
+                if (std::cin.fail()) {
+                    throw std::runtime_error("Netinkama įvestis!");
                 }
-                studentas.nd_balai.push_back(balas);
-                validInput = true;
-            }
-            if (!validInput && studentas.nd_balai.empty()) {
-                std::cout << "Turite įvesti bent vieną namų darbą! Bandykite dar kartą.\n";
+                if (!tikrintiRaides(studentas.vardas)) {
+                    throw std::runtime_error("Vardas turi būti sudarytas tik iš raidžių!");
+                }
+
+                break;  // Teisinga įvestis – išeiname iš ciklo
+            } catch (const std::exception& e) {
+                std::cerr << "Klaida įvedant vardą: " << e.what() << " Bandykite dar kartą.\n";
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            } else {
-                break;
             }
         }
 
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        // Input student surname
+        while (true) {
+            try {
+                std::cout << "Įveskite studento pavardę: ";
+                std::cin >> studentas.pavarde;
 
-        std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
-        while (!(std::cin >> studentas.egzaminas) || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
-            std::cout << "Neteisingas įvedimas. Egzamino balas turi būti nuo 0 iki 10. Bandykite dar kartą: ";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                if (!tikrintiRaides(studentas.pavarde)) {
+                    throw std::runtime_error("Pavardė turi būti sudaryta tik iš raidžių!");
+                }
+
+                break;  // Teisinga įvestis – išeiname iš ciklo
+            } catch (const std::exception& e) {
+                std::cerr << "Klaida įvedant pavardę: " << e.what() << " Bandykite dar kartą.\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+        }
+
+        // Input homework grades
+        while (true) {
+            try {
+                std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
+                int balas;
+                studentas.nd_balai.clear();
+                bool validInput = false;
+
+                while (std::cin >> balas) {
+                    if (balas < 0 || balas > 10) {
+                        std::cerr << "Neteisingas pažymys. Pažymiai turi būti nuo 0 iki 10. Bandykite dar kartą: ";
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
+                    }
+                    studentas.nd_balai.push_back(balas);
+                    validInput = true;
+                }
+
+                if (!validInput) {
+                    throw std::runtime_error("Nenurodyti namų darbų pažymiai!");
+                }
+
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                break;
+            } catch (const std::exception& e) {
+                std::cerr << "Klaida įvedant pažymius: " << e.what() << " Bandykite dar kartą.\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+        }
+
+        // Input exam grade
+        while (true) {
+            try {
+                std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
+                std::cin >> studentas.egzaminas;
+
+                if (std::cin.fail() || studentas.egzaminas < 0 || studentas.egzaminas > 10) {
+                    throw std::runtime_error("Egzamino balas turi būti nuo 0 iki 10!");
+                }
+
+                break;
+            } catch (const std::exception& e) {
+                std::cerr << "Klaida įvedant egzamino balą: " << e.what() << " Bandykite dar kartą.\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
         }
 
         studentai.push_back(studentas);
@@ -123,7 +167,7 @@ std::vector<Student> ivestiStudentus() {
         std::cout << "Ar norite pridėti dar vieną studentą? (y/n): ";
         std::cin >> pasirinkimas;
     } while (pasirinkimas == 'y' || pasirinkimas == 'Y');
-    
+
     return studentai;
 }
 
