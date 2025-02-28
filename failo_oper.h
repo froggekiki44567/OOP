@@ -8,7 +8,6 @@
 
 // Funkcijos failų skaitymui
 std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, double& skaitymoLaikas);
-std::vector<Student> nuskaitytiStudentusIsFailu(const std::vector<std::string>& failuPavadinimai);
 
 // Funkcijos rezultatų išvedimui
 void spausdintiRezultatus(const std::vector<Student>& studentai);

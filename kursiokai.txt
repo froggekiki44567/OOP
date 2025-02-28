@@ -1,12 +1,2 @@
 Vardas              Pavardė            Galutinis (Vidurkis)          Galutinis (Mediana)
 -------------------------------------------------------------------------------
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40
-Ieva                Ievaitė            7.16                          7.40

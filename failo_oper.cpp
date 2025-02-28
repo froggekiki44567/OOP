@@ -51,52 +51,6 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
     return studentai;
 }
 
-std::vector<Student> nuskaitytiStudentusIsFailu(const std::vector<std::string>& failuPavadinimai) {
-    std::vector<Student> pasirinktiStudentai;
-    std::vector<double> skaitymoLaikai;
-    std::vector<std::vector<Student> > visiStudentai;
-    
-    // Nuskaityti visus failus
-    for (const auto& failas : failuPavadinimai) {
-        double laikas;
-        try{
-        std::vector<Student> studentai = nuskaitytiStudentus(failas, laikas);
-        visiStudentai.push_back(studentai);
-        skaitymoLaikai.push_back(laikas);
-        std::cout << "Failo " << failas << " skaitymo laikas: " << laikas << " sekundžių." << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "Klaida skaitant failą: " << failas << e.what() << std::endl;
-        }
-    }
-    
-    // Skaičiuoti vidutinį skaitymo laiką
-    double vidutinisSkaitymoLaikas = 0;
-    for (double laikas : skaitymoLaikai) {
-        vidutinisSkaitymoLaikas += laikas;
-    }
-    vidutinisSkaitymoLaikas /= skaitymoLaikai.size();
-    std::cout << "Vidutinis failų skaitymo laikas: " << vidutinisSkaitymoLaikas << " sekundžių." << std::endl;
-
-    // Pasirinkti failą naudojimui
-    std::cout << "Pasirinkite failą naudojimui (";
-    for (size_t i = 0; i < failuPavadinimai.size(); i++) {
-        std::cout << i+1;
-        if (i < failuPavadinimai.size() - 1) std::cout << ", ";
-    }
-    std::cout << "): ";
-    
-    int failoPasirinkimas;
-    std::cin >> failoPasirinkimas;
-    
-    if (failoPasirinkimas >= 1 && failoPasirinkimas <= static_cast<int>(failuPavadinimai.size())) {
-        pasirinktiStudentai = visiStudentai[failoPasirinkimas - 1];
-    } else {
-        std::cout << "Neteisingas pasirinkimas!" << std::endl;
-    }
-    
-    return pasirinktiStudentai;
-}
-
 void spausdintiRezultatus(const std::vector<Student>& studentai) {
     std::cout << "\nVardas        Pavardė       Galutinis (Vidurkis)     Galutinis (Mediana)" << std::endl;
     std::cout << "--------------------------------------------------------------------------" << std::endl;
@@ -113,7 +67,6 @@ void spausdintiRezultatus(const std::vector<Student>& studentai) {
 }
 
 void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Student>& studentai) {
-    auto start = std::chrono::high_resolution_clock::now(); 
 
     std::ofstream outFile(failoPavadinimas);
     if (outFile.is_open()) {
@@ -135,11 +88,7 @@ void rasytiRezultatus(const std::string& failoPavadinimas, const std::vector<Stu
         outFile.close();
     } else {
         std::cerr << "Nepavyko atidaryti failo: " << failoPavadinimas << std::endl;
-    }
-
-    auto end = std::chrono::high_resolution_clock::now(); 
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo rašymas užtruko: " << duration.count() << " sekundžių." << std::endl;
+    }  
 }
 
 void pasirinktIšvestiesBuda(const std::vector<Student>& studentai) {

@@ -7,6 +7,8 @@
 #include <vector>
 
 int main() {
+    
+    
     std::vector<Student> studentai;
     char pasirinkimas;
 
@@ -35,7 +37,18 @@ int main() {
                 "studentai100000.txt",
                 "studentai1000000.txt"
             };
-            studentai = nuskaitytiStudentusIsFailu(failuPavadinimai);
+            std::cout << "Pasirinkite failą naudojimui (1, 2 arba 3): ";
+            int failoPasirinkimas;
+            std::cin >> failoPasirinkimas;
+            
+            if(failoPasirinkimas >=1 && failoPasirinkimas <= 3) {
+                double skaitymoLaikas;
+                studentai = nuskaitytiStudentus(failuPavadinimai[failoPasirinkimas - 1], skaitymoLaikas);
+                std::cout << "Failo skaitymas užtruko: " << skaitymoLaikas << " sekundžių." << std::endl;
+            } else {
+                std::cout << "Neteisingas pasirinkimas!" << std::endl;
+                return 1;
+            }
             break;
         }
         default:
