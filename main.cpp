@@ -1,4 +1,3 @@
-// main.cpp - Main program entry point
 #include "studentas.h"
 #include "failo_oper.h"
 #include "papild.h"
@@ -25,12 +24,25 @@ int main() {
     
     switch (pasirinkimas) {
         case '1':{
-            std::vector<int> kiekiai = {1000, 100000, 100000, 1000000, 10000000};
+            std::vector<int> kiekiai = {1000, 10000, 100000, 1000000, 10000000};
             std::vector<std::string> failuPavadinimai;
             generuotiStudentuFailus(kiekiai, failuPavadinimai);
 
             //failo pasirinkimas tolimiem veiksmam
-            
+            std::cout << "Pasirinkite failą naudojimui:\n";
+                for (size_t i = 0; i < failuPavadinimai.size(); ++i) {
+                    std::cout << i + 1 << ". " << failuPavadinimai[i] << "\n";
+                }
+                std::cout << "Pasirinkimas: ";
+                int failoPasirinkimas;
+                std::cin >> failoPasirinkimas;
+
+                if (failoPasirinkimas >= 1 && failoPasirinkimas <= failuPavadinimai.size()) {
+                    
+                    rusiotiStudentusISFailus(failuPavadinimai[failoPasirinkimas - 1]);
+                } else {
+                    std::cout << "Neteisingas pasirinkimas!" << std::endl;
+                }
             break;
         }
         case '2': {
@@ -57,6 +69,9 @@ int main() {
                 double skaitymoLaikas;
                 studentai = nuskaitytiStudentus(failuPavadinimai[failoPasirinkimas - 1], skaitymoLaikas);
                 std::cout << "Failo skaitymas užtruko: " << skaitymoLaikas << " sekundžių." << std::endl;
+                rikiuotiStudentusPagalPasirinkima(studentai);
+
+                pasirinktIšvestiesBuda(studentai);
             } else {
                 std::cout << "Neteisingas pasirinkimas!" << std::endl;
                 return 1;
@@ -69,12 +84,5 @@ int main() {
             std::cout << "Neteisingas pasirinkimas!" << std::endl;
             return 1;
     }
-
-    // Rikiuoti studentus pagal pasirinkimą
-    rikiuotiStudentusPagalPasirinkima(studentai);
-
-    // Pasirinkti išvesties būdą
-    pasirinktIšvestiesBuda(studentai);
-
     return 0;
 }

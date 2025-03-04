@@ -1,15 +1,17 @@
 #include "generavimasf.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <random>
 
-void generuotiStudentuFailus(const std::vector<int>& kiekiai) {
+void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failuPavadinimai) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, 10);
 
     for (int kiekis : kiekiai) {
         std::string failoPavadinimas = "Gstudentai" + std::to_string(kiekis) + ".txt";
+        failuPavadinimai.push_back(failoPavadinimas);
         std::ofstream outFile(failoPavadinimas);
         if (!outFile) {
             std::cerr << "Nepavyko sukurti failo: " << failoPavadinimas << std::endl;
@@ -60,6 +62,7 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas){
         studentai.push_back(studentas);
     }   
     inFile.close();
+    rikiuotiStudentusPriesRusiavima(studentai);
 
     std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
     std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
@@ -74,4 +77,25 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas){
     }
     vargsciukaiFile.close();
     kietiakaiFile.close();
+}
+//atskiras rusiavimas generuotiems failams
+void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {
+    char rikiavimoPasirinkimas;
+    std::cout << "Pasirinkite rikiavimo būdą:\n";
+    std::cout << "1. Pagal vardą\n";
+    std::cout << "2. Pagal pavardę\n";
+    std::cout << "3. Pagal galutinį vidurkį\n";
+    std::cout << "Pasirinkimas: ";
+    std::cin >> rikiavimoPasirinkimas;
+
+    char tvarka = 'a';
+    if (rikiavimoPasirinkimas == '3') {
+        std::cout << "Pasirinkite rikiavimo tvarką:\n";
+        std::cout << "a. Didėjimo tvarka\n";
+        std::cout << "d. Mažėjimo tvarka\n";
+        std::cout << "Pasirinkimas: ";
+        std::cin >> tvarka;
+    }
+
+    rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
 }

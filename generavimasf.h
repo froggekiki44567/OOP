@@ -7,5 +7,6 @@
 
 void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failuPavadinimai);
 void rusiotiStudentusISFailus(const std::string& failoPavadinimas);
+void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai);
 
 #endif
