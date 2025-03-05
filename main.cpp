@@ -12,8 +12,8 @@ void generuotiFailus(std::vector<std::string>& failugen) {
     std::vector<int> kiekiai = {1000, 10000, 100000, 1000000, 10000000};
     generuotiStudentuFailus(kiekiai, failugen);
 
-    // Save the list of generated files to a file
-    std::ofstream outFile("generated_files.txt");
+    
+    std::ofstream outFile("generuotasMixas.txt");
     for (const auto& failas : failugen) {
         outFile << failas << std::endl;
     }
@@ -107,7 +107,12 @@ int main() {
         }
         case '5': {
             if (!failugen.empty()) {
+                auto start = std::chrono::high_resolution_clock::now();
                 atliktiLaikoTestusSuFailais(failugen);
+
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double> duration = end - start;
+                std::cout << "Visos programos vykdymo laikas: " << duration.count() << " sekundžių." << std::endl;
             } else {
                 std::cout << "Nėra sugeneruotų failų testavimui." << std::endl;
             }
