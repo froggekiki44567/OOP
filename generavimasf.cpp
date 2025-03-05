@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <random>
 
-void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failuPavadinimai) {
+void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failugen) {
     
     auto start = std::chrono::high_resolution_clock::now();
     
@@ -14,7 +14,7 @@ void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::s
 
     for (int kiekis : kiekiai) {
         std::string failoPavadinimas = "Gstudentai" + std::to_string(kiekis) + ".txt";
-        failuPavadinimai.push_back(failoPavadinimas);
+        failugen.push_back(failoPavadinimas);
         std::ofstream outFile(failoPavadinimas);
         if (!outFile) {
             std::cerr << "Nepavyko sukurti failo: " << failoPavadinimas << std::endl;
@@ -45,7 +45,7 @@ void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::s
     
 
 }
-void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<std::string>& failuPavadinimai) {
+void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<std::string>& failugen) {
     std:: ifstream inFile(failopavadinimas);
     if(!inFile){
         std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
@@ -101,23 +101,23 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
     std::chrono::duration<double> duration3 = end3 - start3;
     std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
 
-    failuPavadinimai.erase(std::remove(failuPavadinimai.begin(), failuPavadinimai.end(), failopavadinimas), failuPavadinimai.end());
-    while(!failuPavadinimai.empty()){
+    failugen.erase(std::remove(failugen.begin(), failugen.end(), failopavadinimas), failugen.end());
+    while(!failugen.empty()){
         char pasirinkimas;
         std::cout << "Ar norite atlikti darbą su kitais failas? (y/n): ";
         std::cin >> pasirinkimas;
 
         if(pasirinkimas == 'Y' || pasirinkimas == 'y'){
            std::cout << "Pasirinkite failą naudojimui:\n";
-           for(size_t i = 0; i < failuPavadinimai.size(); ++i){
-               std::cout << i + 1 << ". " << failuPavadinimai[i] << "\n";
+           for(size_t i = 0; i < failugen.size(); ++i){
+               std::cout << i + 1 << ". " << failugen[i] << "\n";
            }
               std::cout << "Pasirinkimas: ";
               int failoPasirinkimas;
               std::cin >> failoPasirinkimas;
 
-              if(failoPasirinkimas >= 1 && failoPasirinkimas <= failuPavadinimai.size()){
-                  rusiotiStudentusISFailus(failuPavadinimai[failoPasirinkimas - 1], failuPavadinimai);
+              if(failoPasirinkimas >= 1 && failoPasirinkimas <= failugen.size()){
+                  rusiotiStudentusISFailus(failugen[failoPasirinkimas - 1], failugen);
               } else {
                   std::cout << "Neteisingas pasirinkimas!" << std::endl;
               }

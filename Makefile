@@ -7,7 +7,7 @@ CXXFLAGS = -std=c++20 -Wall
 TARGET = kursiokai
 
 
-SRCS = main.cpp studentas.cpp failo_oper.cpp papild.cpp	generavimasf.cpp
+SRCS = main.cpp studentas.cpp failo_oper.cpp papild.cpp	generavimasf.cpp testai.cpp
 
 
 all:
