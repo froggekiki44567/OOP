@@ -36,7 +36,7 @@ void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::s
         outFile.close();
     }
 }
-void rusiotiStudentusISFailus(const std::string& failopavadinimas){
+void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<std::string>& failuPavadinimai) {
     std:: ifstream inFile(failopavadinimas);
     if(!inFile){
         std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
@@ -77,6 +77,31 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas){
     }
     vargsciukaiFile.close();
     kietiakaiFile.close();
+
+    failuPavadinimai.erase(std::remove(failuPavadinimai.begin(), failuPavadinimai.end(), failopavadinimas), failuPavadinimai.end());
+    while(!failuPavadinimai.empty()){
+        char pasirinkimas;
+        std::cout << "Ar norite rūšiuoti kitus failus? (y/n): ";
+        std::cin >> pasirinkimas;
+
+        if(pasirinkimas == 'Y' || pasirinkimas == 'y'){
+           std::cout << "Pasirinkite failą naudojimui:\n";
+           for(size_t i = 0; i < failuPavadinimai.size(); ++i){
+               std::cout << i + 1 << ". " << failuPavadinimai[i] << "\n";
+           }
+              std::cout << "Pasirinkimas: ";
+              int failoPasirinkimas;
+              std::cin >> failoPasirinkimas;
+
+              if(failoPasirinkimas >= 1 && failoPasirinkimas <= failuPavadinimai.size()){
+                  rusiotiStudentusISFailus(failuPavadinimai[failoPasirinkimas - 1], failuPavadinimai);
+              } else {
+                  std::cout << "Neteisingas pasirinkimas!" << std::endl;
+              }
+        } else {
+            break;
+        }
+    }
 }
 //atskiras rusiavimas generuotiems failams
 void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {

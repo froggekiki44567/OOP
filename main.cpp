@@ -38,8 +38,7 @@ int main() {
                 std::cin >> failoPasirinkimas;
 
                 if (failoPasirinkimas >= 1 && failoPasirinkimas <= failuPavadinimai.size()) {
-                    
-                    rusiotiStudentusISFailus(failuPavadinimai[failoPasirinkimas - 1]);
+                    rusiotiStudentusISFailus(failuPavadinimai[failoPasirinkimas - 1], failuPavadinimai);
                 } else {
                     std::cout << "Neteisingas pasirinkimas!" << std::endl;
                 }

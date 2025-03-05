@@ -6,7 +6,7 @@
 #include "studentas.h"
 
 void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failuPavadinimai);
-void rusiotiStudentusISFailus(const std::string& failoPavadinimas);
+void rusiotiStudentusISFailus(const std::string& failoPavadinimas, std::vector<std::string>& failuPavadinimai);
 void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai);
 
 #endif
