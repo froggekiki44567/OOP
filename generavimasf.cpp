@@ -5,6 +5,9 @@
 #include <random>
 
 void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failuPavadinimai) {
+    
+    auto start = std::chrono::high_resolution_clock::now();
+    
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist(0, 10);
@@ -34,7 +37,13 @@ void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::s
         }
 
         outFile.close();
+
+        auto end = std::chrono::high_resolution_clock::now(); 
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failoPavadinimas << " generavimas užtruko: " << duration.count() << " sekundžių." << std::endl;
     }
+    
+
 }
 void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<std::string>& failuPavadinimai) {
     std:: ifstream inFile(failopavadinimas);
@@ -45,6 +54,8 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
     std::vector<Student> studentai;
     std::string vardas, pavarde;
     int balas;
+    
+    auto start = std::chrono::high_resolution_clock::now();
 
     std::string eilute;
     std::getline(inFile, eilute);
@@ -62,11 +73,20 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         studentai.push_back(studentas);
     }   
     inFile.close();
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start; 
+    std::cout << "Failo: " << failopavadinimas << " skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;  
+
+   
+
     rikiuotiStudentusPriesRusiavima(studentai);
+
 
     std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
     std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
 
+    auto start3 = std::chrono::high_resolution_clock::now();
     for(const auto& studentas : studentai){
         double galutinis = galutinisPazymys(studentas, true);
         if(galutinis < 5.0){
@@ -77,11 +97,14 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
     }
     vargsciukaiFile.close();
     kietiakaiFile.close();
+    auto end3 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration3 = end3 - start3;
+    std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
 
     failuPavadinimai.erase(std::remove(failuPavadinimai.begin(), failuPavadinimai.end(), failopavadinimas), failuPavadinimai.end());
     while(!failuPavadinimai.empty()){
         char pasirinkimas;
-        std::cout << "Ar norite rūšiuoti kitus failus? (y/n): ";
+        std::cout << "Ar norite atlikti darbą su kitais failas? (y/n): ";
         std::cin >> pasirinkimas;
 
         if(pasirinkimas == 'Y' || pasirinkimas == 'y'){
@@ -105,6 +128,8 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
 }
 //atskiras rusiavimas generuotiems failams
 void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {
+    
+
     char rikiavimoPasirinkimas;
     std::cout << "Pasirinkite rikiavimo būdą:\n";
     std::cout << "1. Pagal vardą\n";
@@ -122,5 +147,8 @@ void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {
         std::cin >> tvarka;
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
-}
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Rikiavimas užtruko: " << duration.count() << " sekundžių." << std::endl;}
