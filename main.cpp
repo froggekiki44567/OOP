@@ -20,7 +20,7 @@ void generuotiFailus(std::vector<std::string>& failugen) {
 }
 
 void nuskaitytiSugeneruotusFailus(std::vector<std::string>& failugen) {
-    std::ifstream inFile("generated_files.txt");
+    std::ifstream inFile("generuotasMixas.txt");
     std::string failas;
     while (std::getline(inFile, failas)) {
         failugen.push_back(failas);
