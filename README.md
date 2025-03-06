@@ -6,3 +6,6 @@
 | Gstudentai100000.txt   | 0.498675          | 0.45225         | 0.323542          | 0.179727         |
 | Gstudentai1000000.txt  | 4.60542           | 4.2611          | 3.01911           | 1.79616          |
 | Gstudentai10000000.txt | 50.2741           | 44.4223         | 33.6069           | 21.2881          |
+
+Generavimo laikas panaudojus veliavele O3
+![alt text](<Screenshot 2025-03-06 at 17.56.42.png>)
