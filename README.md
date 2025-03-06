@@ -13,7 +13,7 @@ FAILŲ TYRIMŲ REZULTATAI:
 | FAILAS                 |             NUOTRAUKOS           |
 |------------------------|----------------------------------|
 | Gstudentai1000.txt     |           ------                 |
-| Gstudentai10000.txt    |    ![alt text](image-3.png)      |
+| Gstudentai10000.txt    |     ![alt text](image-4.png)     |
 | Gstudentai100000.txt   |    ![alt text](image-2.png)      |
 | Gstudentai1000000.txt  |    ![alt text](image-1.png)      |
 | Gstudentai10000000.txt |    ![alt text](image.png)        |
