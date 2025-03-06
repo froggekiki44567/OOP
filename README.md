@@ -7,5 +7,16 @@
 | Gstudentai1000000.txt  | 4.60542           | 4.2611          | 3.01911           | 1.79616          |
 | Gstudentai10000000.txt | 50.2741           | 44.4223         | 33.6069           | 21.2881          |
 
-Generavimo laikas panaudojus veliavele O3
+
+FAILŲ TYRIMŲ REZULTATAI:
+
+| FAILAS                 |             NUOTRAUKOS           |
+|------------------------|----------------------------------|
+| Gstudentai1000.txt     |           ------                 |
+| Gstudentai10000.txt    |    ![alt text](image-3.png)      |
+| Gstudentai100000.txt   |    ![alt text](image-2.png)      |
+| Gstudentai1000000.txt  |    ![alt text](image-1.png)      |
+| Gstudentai10000000.txt |    ![alt text](image.png)        |
+
+ENERAVIMO LAIKAS PO OPTIMIZAVIMO, PRITAIKIUS O3 VĖLIAVĖLE:
 ![alt text](<Screenshot 2025-03-06 at 17.56.42.png>)
