@@ -46,9 +46,12 @@ std::vector<Student> nuskaitytiStudentus(const std::string& failoPavadinimas, do
                 std::cerr << "Klaida: Studentas " << studentas.vardas << " " << studentas.pavarde << " neturi pažymių." << std::endl;
                 continue;  // Pereiname prie kitos eilutės
             }
-
-            studentas.nd_balai = std::vector<int>(pazymiai.begin(), pazymiai.end() - 1);
+            
             studentas.egzaminas = pazymiai.back();
+            pazymiai.pop_back();
+            
+            studentas.nd_balai = pazymiai;
+            
             studentai.push_back(studentas);
         }
 
