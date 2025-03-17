@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 
+//generuojam failus su studentais
 void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::string>& failugen) {
     auto start = std::chrono::high_resolution_clock::now();
     
@@ -45,7 +46,12 @@ void generuotiStudentuFailus(const std::vector<int>& kiekiai, std::vector<std::s
     }
 }
 
+//rusiuojam studentus i gerus blogus, skaitom is failo
+bool baigtidarba = false;
 void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<std::string>& failugen) {
+    if(baigtidarba){
+        return;
+    }
     std::ifstream inFile(failopavadinimas);
     if(!inFile){
         std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
@@ -72,76 +78,167 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         inFile >> studentas.egzaminas;
         studentai.push_back(studentas);
     }   
-    inFile.close();
+    inFile.close(); // skaitimo pabaiga
 
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start; 
-    std::cout << "Failo: " << failopavadinimas << " skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;  
+    rikiuotiStudentusPriesRusiavima(studentai); // kreipimas i rusiavima pries perduodant i konteinerius
 
-    rikiuotiStudentusPriesRusiavima(studentai);
+    // strategijos pasirinkimas
+    char strategijosPasirinkimas;
+    std::cout << "Pasirinkite strategiją:\n";
+    std::cout << "1. Paprasta strategija\n";
+    std::cout << "2. Bendro studentų konteinerio skaidymas\n";
+    std::cout << "3. Naudojant algoritmus\n";
+    std::cout << "Pasirinkimas: ";
+    std::cin >> strategijosPasirinkimas;
 
-    std::vector<Student> vargsciukai;
-    std::vector<Student> kietiakai;
+    // #1 strategija
+    if (strategijosPasirinkimas == '1') {
+        std::vector<Student> vargsciukai;
+        std::vector<Student> kietiakai;
 
-    auto start3 = std::chrono::high_resolution_clock::now();
-    for(const auto& studentas : studentai){
-        double galutinis = galutinisPazymys(studentas, true);
-        if(galutinis < 5.0){
-            vargsciukai.push_back(studentas);
-        } else {
-            kietiakai.push_back(studentas);
+        auto start3 = std::chrono::high_resolution_clock::now();
+        for(const auto& studentas : studentai){
+            double galutinis = galutinisPazymys(studentas, true);
+            if(galutinis < 5.0){
+                vargsciukai.push_back(studentas);
+            } else {
+                kietiakai.push_back(studentas);
+            }
         }
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for(const auto& studentas : vargsciukai){
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for(const auto& studentas : kietiakai){
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        kietiakai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+    } 
+    // #2 strategija
+    else if (strategijosPasirinkimas == '2') {
+        std::vector<Student> vargsciukai;
+        auto start3 = std::chrono::high_resolution_clock::now();
+        auto it = studentai.begin();
+        while (it != studentai.end()) {
+            double galutinis = galutinisPazymys(*it, true);
+            if (galutinis < 5.0) {
+                vargsciukai.push_back(*it);
+                it = studentai.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for(const auto& studentas : vargsciukai){
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for(const auto& studentas : studentai){
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        studentai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+    }
+    // #3 strategija
+    else if (strategijosPasirinkimas == '3') {
+        std::vector<Student> vargsciukai;
+        std::vector<Student> kietiakai;
+
+        auto start3 = std::chrono::high_resolution_clock::now();
+
+        //std::partition kad atskirti vargšciukus nuo kietiakų
+        auto it = std::partition(studentai.begin(), studentai.end(), [](const Student& studentas) {
+            return galutinisPazymys(studentas, true) < 5.0;
+        });
+
+        // Kopijuojami vargšciukai ir kietiakai i vektorius
+        std::copy(studentai.begin(), it, std::back_inserter(vargsciukai));
+        
+        std::copy(it, studentai.end(), std::back_inserter(kietiakai));
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for(const auto& studentas : vargsciukai){
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for(const auto& studentas : kietiakai){
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        kietiakai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
     }
 
-    std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
-    std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
-
-    for(const auto& studentas : vargsciukai){
-        double galutinis = galutinisPazymys(studentas, true);
-        vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
-    }
-
-    for(const auto& studentas : kietiakai){
-        double galutinis = galutinisPazymys(studentas, true);
-        kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
-    }
-
-    vargsciukaiFile.close();
-    kietiakaiFile.close();
-
-    vargsciukai.clear();
-    kietiakai.clear();
-
-    auto end3 = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration3 = end3 - start3;
-    std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
-
+    // panaudoto failo trinimas
     failugen.erase(std::remove(failugen.begin(), failugen.end(), failopavadinimas), failugen.end());
     while(!failugen.empty()){
         char pasirinkimas;
-        std::cout << "Ar norite atlikti darbą su kitais failas? (y/n): ";
+        std::cout << "Ar norite baigti darbą? (y/n): ";
         std::cin >> pasirinkimas;
-
+   
+        // darbo pabaigos klausimas
         if(pasirinkimas == 'Y' || pasirinkimas == 'y'){
-           std::cout << "Pasirinkite failą naudojimui:\n";
-           for(size_t i = 0; i < failugen.size(); ++i){
-               std::cout << i + 1 << ". " << failugen[i] << "\n";
-           }
-              std::cout << "Pasirinkimas: ";
-              int failoPasirinkimas;
-              std::cin >> failoPasirinkimas;
-
-              if(failoPasirinkimas >= 1 && failoPasirinkimas <= failugen.size()){
-                  rusiotiStudentusISFailus(failugen[failoPasirinkimas - 1], failugen);
-              } else {
-                  std::cout << "Neteisingas pasirinkimas!" << std::endl;
-              }
-        } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            baigtidarba = true;
             break;
+        } else {
+            std::cout << "Pasirinkite failą naudojimui:\n";
+            for(size_t i = 0; i < failugen.size(); ++i){
+                std::cout << i + 1 << ". " << failugen[i] << "\n";
+            }
+            std::cout << "Pasirinkimas: ";
+            int failoPasirinkimas;
+            std::cin >> failoPasirinkimas;
+
+            if(failoPasirinkimas >= 1 && failoPasirinkimas <= failugen.size()){
+                rusiotiStudentusISFailus(failugen[failoPasirinkimas - 1], failugen);
+            } else {
+                std::cout << "Neteisingas pasirinkimas!" << std::endl;
+            }
         }
     }
 }
 
+//rikiavimo fukcija
 void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {
     char rikiavimoPasirinkimas;
     std::cout << "Pasirinkite rikiavimo būdą:\n";

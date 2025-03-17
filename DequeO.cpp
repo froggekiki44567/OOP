@@ -5,8 +5,13 @@
 #include <sstream>
 #include <chrono>
 #include <iostream>
+#include <deque>
 
 void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deque<std::string>& failugenDeque) {
+    bool darboPabaiga = false;
+    if (darboPabaiga) {
+        return;
+    }
     std::ifstream inFile(failopavadinimas);
     if (!inFile) {
         std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
@@ -41,49 +46,137 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
 
     rikiuotiStudentusPriesSkirstymaDeq(studentai);
 
-    std::deque<Student> vargsciukai;
-    std::deque<Student> kietiakai;
+    char strategijosPasirinkimas;
+    std::cout << "Pasirinkite strategiją:\n";
+    std::cout << "1. Paprasta strategija\n";
+    std::cout << "2. Bendro studentų konteinerio skaidymas\n";
+    std::cout << "3. Naudojant algoritmus\n";
+    std::cout << "Pasirinkimas: ";
+    std::cin >> strategijosPasirinkimas;
 
-    auto start3 = std::chrono::high_resolution_clock::now();
-    for (const auto& studentas : studentai) {
-        double galutinis = galutinisPazymys(studentas, true);
-        if (galutinis < 5.0) {
-            vargsciukai.push_back(studentas);
-        } else {
-            kietiakai.push_back(studentas);
+    if (strategijosPasirinkimas == '1') {
+        std::deque<Student> vargsciukai;
+        std::deque<Student> kietiakai;
+
+        auto start3 = std::chrono::high_resolution_clock::now();
+        for (const auto& studentas : studentai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            if (galutinis < 5.0) {
+                vargsciukai.push_back(studentas);
+            } else {
+                kietiakai.push_back(studentas);
+            }
         }
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for (const auto& studentas : vargsciukai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for (const auto& studentas : kietiakai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        kietiakai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+    } else if (strategijosPasirinkimas == '2') {
+        std::deque<Student> vargsciukai;
+
+        auto start3 = std::chrono::high_resolution_clock::now();
+        auto it = studentai.begin();
+        while (it != studentai.end()) {
+            double galutinis = galutinisPazymys(*it, true);
+            if (galutinis < 5.0) {
+                vargsciukai.push_back(*it);
+                it = studentai.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for (const auto& studentas : vargsciukai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for (const auto& studentas : studentai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        studentai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+    } else if (strategijosPasirinkimas == '3') {
+        std::deque<Student> vargsciukai;
+        std::deque<Student> kietiakai;
+
+        auto start3 = std::chrono::high_resolution_clock::now();
+
+        // Using std::partition to separate vargsciukai and kietiakai
+        auto it = std::partition(studentai.begin(), studentai.end(), [](const Student& studentas) {
+            return galutinisPazymys(studentas, true) < 5.0;
+        });
+
+        // Copy vargsciukai to vargsciukai deque
+        std::copy(studentai.begin(), it, std::back_inserter(vargsciukai));
+        // Copy kietiakai to kietiakai deque
+        std::copy(it, studentai.end(), std::back_inserter(kietiakai));
+
+        std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
+        std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
+
+        for (const auto& studentas : vargsciukai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        for (const auto& studentas : kietiakai) {
+            double galutinis = galutinisPazymys(studentas, true);
+            kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
+        }
+
+        vargsciukaiFile.close();
+        kietiakaiFile.close();
+
+        vargsciukai.clear();
+        kietiakai.clear();
+
+        auto end3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end3 - start3;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
     }
-
-    std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
-    std::ofstream kietiakaiFile("kietiakai_" + failopavadinimas);
-
-    for (const auto& studentas : vargsciukai) {
-        double galutinis = galutinisPazymys(studentas, true);
-        vargsciukaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
-    }
-
-    for (const auto& studentas : kietiakai) {
-        double galutinis = galutinisPazymys(studentas, true);
-        kietiakaiFile << studentas.vardas << " " << studentas.pavarde << " " << galutinis << std::endl;
-    }
-
-    vargsciukaiFile.close();
-    kietiakaiFile.close();
-
-    vargsciukai.clear();
-    kietiakai.clear();
-
-    auto end3 = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration3 = end3 - start3;
-    std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
 
     failugenDeque.erase(std::remove(failugenDeque.begin(), failugenDeque.end(), failopavadinimas), failugenDeque.end());
     while (!failugenDeque.empty()) {
         char pasirinkimas;
-        std::cout << "Ar norite atlikti darbą su kitais failas? (y/n): ";
+        std::cout << "Ar norite baigti darbą? (y/n): ";
         std::cin >> pasirinkimas;
 
         if (pasirinkimas == 'Y' || pasirinkimas == 'y') {
+            darboPabaiga = true;
+            return; // Exit the function to finish the work
+        } else {
             std::cout << "Pasirinkite failą naudojimui:\n";
             for (size_t i = 0; i < failugenDeque.size(); ++i) {
                 std::cout << i + 1 << ". " << failugenDeque[i] << "\n";
@@ -97,8 +190,6 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
             } else {
                 std::cout << "Neteisingas pasirinkimas!" << std::endl;
             }
-        } else {
-            break;
         }
     }
 }
