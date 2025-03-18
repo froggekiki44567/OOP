@@ -52,9 +52,25 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
     if(baigtidarba){
         return;
     }
-    std::ifstream inFile(failopavadinimas);
+    
+    std::cout << "Pasirinkite failą naudojimui:\n";
+    for (size_t i = 0; i < failugen.size(); ++i) {
+        std::cout << i + 1 << ". " << failugen[i] << "\n";
+    }
+    std::cout << "Pasirinkimas: ";
+    int failoPasirinkimas;
+    std::cin >> failoPasirinkimas;
+
+    if (failoPasirinkimas < 1 || failoPasirinkimas > failugen.size()) {
+        std::cout << "Neteisingas pasirinkimas!" << std::endl;
+        return;
+    }
+
+    std::string pasirinktasFailas = failugen[failoPasirinkimas - 1];
+
+    std::ifstream inFile(pasirinktasFailas);
     if(!inFile){
-        std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
+        std::cerr << "Nepavyko atidaryti failo: " << pasirinktasFailas << std::endl;
         return;
     }
     std::vector<Student> studentai;
@@ -82,7 +98,7 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo: " << failopavadinimas << " skaitymas su vector užtruko: " << duration.count() << " sekundžių." << std::endl;
+    std::cout << "Failo: " << pasirinktasFailas << " skaitymas su vector užtruko: " << duration.count() << " sekundžių." << std::endl;
 
     rikiuotiStudentusPriesRusiavima(studentai); // kreipimas i rusiavima pries perduodant i konteinerius
 

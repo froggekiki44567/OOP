@@ -13,9 +13,29 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
     if (darboPabaiga) {
         return;
     }
-    std::ifstream inFile(failopavadinimas);
+
+    std::cout << "Pasirinkite failą naudojimui:\n";
+    int index = 1;
+    for (const auto& failas : failugenList) {
+        std::cout << index++ << ". " << failas << "\n";
+    }
+    std::cout << "Pasirinkimas: ";
+    int failoPasirinkimas;
+    std::cin >> failoPasirinkimas;
+
+    if (failoPasirinkimas < 1 || failoPasirinkimas > static_cast<int>(failugenList.size())) {
+        std::cout << "Neteisingas pasirinkimas!" << std::endl;
+        return;
+    }
+
+    // Use an iterator to access the selected file
+    auto it = failugenList.begin();
+    std::advance(it, failoPasirinkimas - 1);
+    std::string pasirinktasFailas = *it;
+
+    std::ifstream inFile(pasirinktasFailas);
     if (!inFile) {
-        std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
+        std::cerr << "Nepavyko atidaryti failo: " << pasirinktasFailas << std::endl;
         return;
     }
     std::list<Student> studentai;
@@ -45,7 +65,7 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
     //skaitymo pabaiga
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo: " << failopavadinimas << " skaitymas su List užtruko: " << duration.count() << " sekundžių." << std::endl;
+    std::cout << "Failo: " << pasirinktasFailas << " skaitymas su List užtruko: " << duration.count() << " sekundžių." << std::endl;
 
     rikiuotiStudentusPriesSkirtymaList(studentai);
 

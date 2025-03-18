@@ -13,9 +13,25 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
     if (darboPabaiga) {
         return;
     }
+
+    std::cout << "Pasirinkite failą naudojimui:\n";
+    for (size_t i = 0; i < failugenDeque.size(); ++i) {
+        std::cout << i + 1 << ". " << failugenDeque[i] << "\n";
+    }
+    std::cout << "Pasirinkimas: ";
+    int failoPasirinkimas;
+    std::cin >> failoPasirinkimas;
+
+    if (failoPasirinkimas < 1 || failoPasirinkimas > failugenDeque.size()) {
+        std::cout << "Neteisingas pasirinkimas!" << std::endl;
+        return;
+    }
+
+    std::string pasirinktasFailas = failugenDeque[failoPasirinkimas - 1];
+
     std::ifstream inFile(failopavadinimas);
     if (!inFile) {
-        std::cerr << "Nepavyko atidaryti failo: " << failopavadinimas << std::endl;
+        std::cerr << "Nepavyko atidaryti failo: " << pasirinktasFailas << std::endl;
         return;
     }
     std::deque<Student> studentai;
@@ -47,7 +63,7 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
     // skaitymo laikas pabaiga
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo: " << failopavadinimas << " skaitymas su Deque užtruko: " << duration.count() << " sekundžių." << std::endl;
+    std::cout << "Failo: " << pasirinktasFailas << " skaitymas su Deque užtruko: " << duration.count() << " sekundžių." << std::endl;
 
     rikiuotiStudentusPriesSkirstymaDeq(studentai); // rikiuojame studentus pries ju skirstyma
 
