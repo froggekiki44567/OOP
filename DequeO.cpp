@@ -22,6 +22,7 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
     std::string vardas, pavarde;
     int balas;
 
+    //skaitymo laikas pradzia
     auto start = std::chrono::high_resolution_clock::now();
 
     std::string eilute;
@@ -43,9 +44,10 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
 
     // skaitymo pabaiga
 
+    // skaitymo laikas pabaiga
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Failo: " << failopavadinimas << " skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;
+    std::cout << "Failo: " << failopavadinimas << " skaitymas su Deque užtruko: " << duration.count() << " sekundžių." << std::endl;
 
     rikiuotiStudentusPriesSkirstymaDeq(studentai); // rikiuojame studentus pries ju skirstyma
 
@@ -62,7 +64,8 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         std::deque<Student> vargsciukai;
         std::deque<Student> kietiakai;
 
-        auto start3 = std::chrono::high_resolution_clock::now();
+        // #1 strategijos laiko pradzia
+        auto start = std::chrono::high_resolution_clock::now();
         for (const auto& studentas : studentai) {
             double galutinis = galutinisPazymys(studentas, true);
             if (galutinis < 5.0) {
@@ -91,15 +94,17 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         vargsciukai.clear();
         kietiakai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        // #1 strategijos laiko pabaiga
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus su Deque užtruko su #1 strategija užtruko: " << duration.count() << " sekundžių." << std::endl;
     } 
     // #2 strategija i viena vektoriu ir tada istrinimas
     else if (strategijosPasirinkimas == '2') {
         std::deque<Student> vargsciukai;
 
-        auto start3 = std::chrono::high_resolution_clock::now();
+        // #2 strategijos laiko pradzia
+        auto start = std::chrono::high_resolution_clock::now();
         auto it = studentai.begin();
         while (it != studentai.end()) {
             double galutinis = galutinisPazymys(*it, true);
@@ -130,25 +135,27 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         vargsciukai.clear();
         studentai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        // 2 strategijos laiko pabaiga
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus su Deque ir #2 strategija užtruko: " << duration.count() << " sekundžių." << std::endl;
     } 
     // #3 strategija naudojant algoritmus su 1 strategija
     else if (strategijosPasirinkimas == '3') {
         std::deque<Student> vargsciukai;
         std::deque<Student> kietiakai;
 
-        auto start3 = std::chrono::high_resolution_clock::now();
+        // #3 strategijos laiko pradzia
+        auto start = std::chrono::high_resolution_clock::now();
 
-        // Using std::partition to separate vargsciukai and kietiakai
+        //std::partition kad atskirti vargsciukai and kietiakai
         auto it = std::partition(studentai.begin(), studentai.end(), [](const Student& studentas) {
             return galutinisPazymys(studentas, true) < 5.0;
         });
 
-        // Copy vargsciukai to vargsciukai deque
+        // Kopijuojam vargsciukai i vargsciukai deque
         std::copy(studentai.begin(), it, std::back_inserter(vargsciukai));
-        // Copy kietiakai to kietiakai deque
+        // Kopijuojam kietiakai i kietiakai deque
         std::copy(it, studentai.end(), std::back_inserter(kietiakai));
 
         std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
@@ -170,9 +177,10 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         vargsciukai.clear();
         kietiakai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        // #3 strategijos laiko pabaiga
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas su Deque ir #3 strategija į failus užtruko: " << duration.count() << " sekundžių." << std::endl;
     }
 
     failugenDeque.erase(std::remove(failugenDeque.begin(), failugenDeque.end(), failopavadinimas), failugenDeque.end());

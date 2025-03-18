@@ -80,6 +80,10 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
     }   
     inFile.close(); // skaitimo pabaiga
 
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Failo: " << failopavadinimas << " skaitymas su vector užtruko: " << duration.count() << " sekundžių." << std::endl;
+
     rikiuotiStudentusPriesRusiavima(studentai); // kreipimas i rusiavima pries perduodant i konteinerius
 
     // strategijos pasirinkimas
@@ -96,7 +100,8 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         std::vector<Student> vargsciukai;
         std::vector<Student> kietiakai;
 
-        auto start3 = std::chrono::high_resolution_clock::now();
+        // #1 strategijos laiko pradzia
+        auto start = std::chrono::high_resolution_clock::now();
         for(const auto& studentas : studentai){
             double galutinis = galutinisPazymys(studentas, true);
             if(galutinis < 5.0){
@@ -125,14 +130,15 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         vargsciukai.clear();
         kietiakai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        //#1 strategijos laiko pabaiga
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration3 = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus su vector ir #1 strategija užtruko: " << duration3.count() << " sekundžių." << std::endl;
     } 
     // #2 strategija
     else if (strategijosPasirinkimas == '2') {
         std::vector<Student> vargsciukai;
-        auto start3 = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now(); // #2 strategijos laiko pradzia
         auto it = studentai.begin();
         while (it != studentai.end()) {
             double galutinis = galutinisPazymys(*it, true);
@@ -163,16 +169,17 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         vargsciukai.clear();
         studentai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus su vector ir #2 strategija užtruko: " << duration.count() << " sekundžių." << std::endl;
     }
     // #3 strategija
     else if (strategijosPasirinkimas == '3') {
         std::vector<Student> vargsciukai;
         std::vector<Student> kietiakai;
 
-        auto start3 = std::chrono::high_resolution_clock::now();
+        // #3 strategijos laiko pradzia
+        auto start = std::chrono::high_resolution_clock::now();
 
         //std::partition kad atskirti vargšciukus nuo kietiakų
         auto it = std::partition(studentai.begin(), studentai.end(), [](const Student& studentas) {
@@ -203,9 +210,10 @@ void rusiotiStudentusISFailus(const std::string& failopavadinimas, std::vector<s
         vargsciukai.clear();
         kietiakai.clear();
 
-        auto end3 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration3 = end3 - start3;
-        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
+        // #3 strategijos laiko pabaiga
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "Failo: " << failopavadinimas << " skirstimas į failus su vector ir #3 strategija užtruko: " << duration.count() << " sekundžių." << std::endl;
     }
 
     // panaudoto failo trinimas
@@ -258,8 +266,8 @@ void rikiuotiStudentusPriesRusiavima(std::vector<Student>& studentai) {
     }
 
     auto start = std::chrono::high_resolution_clock::now();
-    rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka);
+    rikiuotiStudentus(studentai, rikiavimoPasirinkimas, tvarka); // kreipiamasi i rikiavimo funkcija studentas.cpp
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Rikiavimas užtruko: " << duration.count() << " sekundžių." << std::endl;
+    std::cout << "Rikiavimas su vector užtruko: " << duration.count() << " sekundžių." << std::endl;
 }
