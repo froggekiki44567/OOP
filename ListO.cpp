@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 
+// skaitymas ir rusiavimas igyvendinant 3 strategijas pasirinktinai
 void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list<std::string>& failugenList) {
     bool darboPabaiga = false;
     if (darboPabaiga) {
@@ -40,6 +41,8 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
     }
     inFile.close();
 
+    //skaitymo pabaiga
+
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Failo: " << failopavadinimas << " skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;
@@ -54,6 +57,7 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
     std::cout << "Pasirinkimas: ";
     std::cin >> strategijosPasirinkimas;
 
+    // #1 strategija
     if (strategijosPasirinkimas == '1') {
         std::list<Student> vargsciukai;
         std::list<Student> kietiakai;
@@ -90,7 +94,9 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
         auto end3 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration3 = end3 - start3;
         std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
-    } else if (strategijosPasirinkimas == '2') {
+    } 
+    // #2 strategija
+    else if (strategijosPasirinkimas == '2') {
         std::list<Student> vargsciukai;
 
         auto start3 = std::chrono::high_resolution_clock::now();
@@ -127,20 +133,22 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
         auto end3 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration3 = end3 - start3;
         std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
-    } else if (strategijosPasirinkimas == '3') {
+    } 
+    // #3 strategija
+    else if (strategijosPasirinkimas == '3') {
         std::list<Student> vargsciukai;
         std::list<Student> kietiakai;
 
         auto start3 = std::chrono::high_resolution_clock::now();
 
-        // Using std::partition to separate vargsciukai and kietiakai
+        // std::partition kad atskirti vargsciukai and kietiakai
         auto it = std::partition(studentai.begin(), studentai.end(), [](const Student& studentas) {
             return galutinisPazymys(studentas, true) < 5.0;
         });
 
-        // Copy vargsciukai to vargsciukai list
+        // Kopijuojam vargsciukai i vargsciukai list
         std::copy(studentai.begin(), it, std::back_inserter(vargsciukai));
-        // Copy kietiakai to kietiakai list
+        // Kopijuojam kietiakai i kietiakai list
         std::copy(it, studentai.end(), std::back_inserter(kietiakai));
 
         std::ofstream vargsciukaiFile("vargsciukai_" + failopavadinimas);
@@ -175,7 +183,7 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
 
         if (pasirinkimas == 'Y' || pasirinkimas == 'y') {
             darboPabaiga = true;
-            return; // Exit the function to finish the work
+            return; 
         } else {
             std::cout << "Pasirinkite failą naudojimui:\n";
             int index = 1;
@@ -217,6 +225,7 @@ void rikiuotiStudentusPriesSkirtymaList(std::list<Student>& studentai) {
         std::cin >> tvarka;
     }
 
+    // atskira rikiavimo funkcija skirta list
     auto start = std::chrono::high_resolution_clock::now();
     if (rikiavimoPasirinkimas == '1') {
         studentai.sort([](const Student& a, const Student& b) {

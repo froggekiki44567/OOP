@@ -4,7 +4,7 @@
 
 #include <string>
 
-// Pagalbinės funkcijos
+// Pagalbinės funkcijos kad tikrinti ar gerai parasytas string
 bool tikrintiRaides(const std::string& str);
 
 #endif

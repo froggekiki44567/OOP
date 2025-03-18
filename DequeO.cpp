@@ -7,6 +7,7 @@
 #include <iostream>
 #include <deque>
 
+// failo skaitymas ir studentu skirtymas pagal 3 strategijas pasirinktinai
 void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deque<std::string>& failugenDeque) {
     bool darboPabaiga = false;
     if (darboPabaiga) {
@@ -40,11 +41,13 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
     }
     inFile.close();
 
+    // skaitymo pabaiga
+
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Failo: " << failopavadinimas << " skaitymas užtruko: " << duration.count() << " sekundžių." << std::endl;
 
-    rikiuotiStudentusPriesSkirstymaDeq(studentai);
+    rikiuotiStudentusPriesSkirstymaDeq(studentai); // rikiuojame studentus pries ju skirstyma
 
     char strategijosPasirinkimas;
     std::cout << "Pasirinkite strategiją:\n";
@@ -54,6 +57,7 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
     std::cout << "Pasirinkimas: ";
     std::cin >> strategijosPasirinkimas;
 
+    // #1 strategija - paprasta i du vektorius
     if (strategijosPasirinkimas == '1') {
         std::deque<Student> vargsciukai;
         std::deque<Student> kietiakai;
@@ -90,7 +94,9 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         auto end3 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration3 = end3 - start3;
         std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
-    } else if (strategijosPasirinkimas == '2') {
+    } 
+    // #2 strategija i viena vektoriu ir tada istrinimas
+    else if (strategijosPasirinkimas == '2') {
         std::deque<Student> vargsciukai;
 
         auto start3 = std::chrono::high_resolution_clock::now();
@@ -127,7 +133,9 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
         auto end3 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration3 = end3 - start3;
         std::cout << "Failo: " << failopavadinimas << " skirstimas į failus užtruko: " << duration3.count() << " sekundžių." << std::endl;
-    } else if (strategijosPasirinkimas == '3') {
+    } 
+    // #3 strategija naudojant algoritmus su 1 strategija
+    else if (strategijosPasirinkimas == '3') {
         std::deque<Student> vargsciukai;
         std::deque<Student> kietiakai;
 
@@ -175,7 +183,7 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
 
         if (pasirinkimas == 'Y' || pasirinkimas == 'y') {
             darboPabaiga = true;
-            return; // Exit the function to finish the work
+            return;
         } else {
             std::cout << "Pasirinkite failą naudojimui:\n";
             for (size_t i = 0; i < failugenDeque.size(); ++i) {
@@ -211,7 +219,7 @@ void rikiuotiStudentusPriesSkirstymaDeq(std::deque<Student>& studentai) {
         std::cout << "Pasirinkimas: ";
         std::cin >> tvarka;
     }
-
+    // atskiras deque studentu rusiavimas, taip pat sort naudojimas
     auto start = std::chrono::high_resolution_clock::now();
     if (rikiavimoPasirinkimas == '1') {
         std::sort(studentai.begin(), studentai.end(), [](const Student& a, const Student& b) {

@@ -6,4 +6,4 @@
 
 void atliktiLaikoTestusSuFailais(std::vector<std::string>& failugen);
 
-#endif // TESTAI_H
+#endif 
