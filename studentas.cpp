@@ -72,7 +72,7 @@ std::vector<Student> ivestiStudentus() {
     do {
         Student studentas;
 
-        // Input student name
+        
         while (true) {
             try {
                 std::cout << "\nĮveskite studento vardą: ";
@@ -93,7 +93,7 @@ std::vector<Student> ivestiStudentus() {
             }
         }
 
-        // Input student surname
+       
         while (true) {
             try {
                 std::cout << "Įveskite studento pavardę: ";
@@ -111,7 +111,7 @@ std::vector<Student> ivestiStudentus() {
             }
         }
 
-        // Input homework grades
+        
         while (true) {
             try {
                 std::cout << "Įveskite namų darbų pažymius (baigti įvesdami ne skaičių): ";
@@ -144,7 +144,7 @@ std::vector<Student> ivestiStudentus() {
             }
         }
 
-        // Input exam grade
+      
         while (true) {
             try {
                 std::cout << "Įveskite egzamino balą (nuo 0 iki 10): ";
