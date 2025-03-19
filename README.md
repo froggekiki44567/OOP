@@ -33,7 +33,7 @@
 | Gstudentai1000.txt     |   ![alt text](image-15.png)     |   
 | Gstudentai10000.txt    |   ![alt text](image-16.png)     |   
 | Gstudentai100000.txt   |   ![alt text](image-17.png)     |   
-| Gstudentai1000000.txt  |   ![alt text](image-18.png)     |   
+| Gstudentai1000000.txt  |   ![alt text](image-20.png)     |   
 | Gstudentai10000000.txt |   ![alt text](image-19.png)     |
 
 
