@@ -68,14 +68,13 @@
    - Atsisiųskite projektą:
      git clone <https://github.com/frogg-kek/OOP>
 
-   - Paleiskite `make` komandą:
-      make
+   - Paleiskite `make` komandą
 
    - Sukurtas vykdomasis failas bus pavadintas `kursiokai`.
 
 3. **Paleidimas**:
    - Paleiskite programą:
-     ./kursiokai
+     `./kursiokai`
 
 4. **Valymas**:
-     make clean
+     `make clean`
