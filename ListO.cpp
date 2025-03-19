@@ -28,7 +28,6 @@ void rusiotiStudentusISFailusList(const std::string& failopavadinimas, std::list
         return;
     }
 
-    // Use an iterator to access the selected file
     auto it = failugenList.begin();
     std::advance(it, failoPasirinkimas - 1);
     std::string pasirinktasFailas = *it;
