@@ -26,3 +26,9 @@ FAILŲ TYRIMŲ REZULTATAI SU 03 vėliavėlę:
 | Gstudentai100000.txt   |    ![alt text](image-12.png)    |   
 | Gstudentai1000000.txt  |    ![alt text](image-13.png)    |   
 | Gstudentai10000000.txt |    ![alt text](image-14.png)    |
+
+
+TESTAVIMAI ATLIKTI SU TOKIA GELEŽIM:
+PROCESORIUS: Apple M3
+RAM: 8GB
+SSD: 256GB
