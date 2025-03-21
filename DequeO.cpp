@@ -29,7 +29,7 @@ void rusiotiStudentusISFailusDeque(const std::string& failopavadinimas, std::deq
 
     std::string pasirinktasFailas = failugenDeque[failoPasirinkimas - 1];
 
-    std::ifstream inFile(failopavadinimas);
+    std::ifstream inFile(pasirinktasFailas);
     if (!inFile) {
         std::cerr << "Nepavyko atidaryti failo: " << pasirinktasFailas << std::endl;
         return;
